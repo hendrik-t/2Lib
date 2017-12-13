@@ -18,6 +18,13 @@ public class Item {
 
     };
 
+    /* Overloaded Constructor */
+    public Item(String[] columns, String[] entries) {
+        for(int i=0; i<columns.length; i++) {
+            itemMap.put(columns[i], entries[i]);
+        }
+    };
+
 /* Getter */
     public HashMap getItemMap() {
         return itemMap;
@@ -29,5 +36,10 @@ public class Item {
     }
 
 /* Methods */
+
+    /* Adds Entry to the Hashmap itemMap */
+    public void addEntryToHashMap(String columnName, String entry) {
+        itemMap.put(columnName, entry);
+    };
 
 }
