@@ -5,6 +5,7 @@ import DataLayer.Item;
 
 /**
  * Created by nilskjellbeck on 13.12.17.
+ * Last edited by Hendrik Tete on 14.12.17
  */
 
 enum TableType {MUSIC, BOOKS, MOVIES, GAMES, CUSTOM}
