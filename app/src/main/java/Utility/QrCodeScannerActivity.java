@@ -1,4 +1,4 @@
-package tulip.presentationLayer;
+package Utility;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,36 +7,29 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
-import com.google.zxing.Result;
 
-import Utility.QrCodeScannerActivity;
+import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import static android.Manifest.permission.CAMERA;
 
-/**
- * Created by nilskjellbeck on 14.12.17.
- */
-
-public class NewActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class QrCodeScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private static final int REQUEST_CAMERA = 1;
-    private ZXingScannerView zXingScannerView;
+    private ZXingScannerView mScannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        zXingScannerView = new ZXingScannerView(this);
-        setContentView(zXingScannerView);
+        mScannerView = new ZXingScannerView(this);
+        setContentView(mScannerView);
         int currentapiVersion = Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
@@ -46,6 +39,7 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
             }
         }
     }
+
     private boolean checkPermission() {
         return ( ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA ) == PackageManager.PERMISSION_GRANTED);
     }
@@ -62,7 +56,7 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if (cameraAccepted){
                         Toast.makeText(getApplicationContext(), "Permission Granted, Now you can access camera", Toast.LENGTH_LONG).show();
-                    }else {
+                }else {
                         Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access and camera", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (shouldShowRequestPermissionRationale(CAMERA)) {
@@ -86,7 +80,7 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
     }
 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(QrCodeScannerActivity.this)
                 .setMessage(message)
                 .setPositiveButton("OK", okListener)
                 .setNegativeButton("Cancel", null)
@@ -101,12 +95,12 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
         int currentapiVersion = Build.VERSION.SDK_INT;
         if (currentapiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
-                if(zXingScannerView == null) {
-                    zXingScannerView = new ZXingScannerView(this);
-                    setContentView(zXingScannerView);
+                if(mScannerView == null) {
+                    mScannerView = new ZXingScannerView(this);
+                    setContentView(mScannerView);
                 }
-                zXingScannerView.setResultHandler(this);
-                zXingScannerView.startCamera(camId);
+                mScannerView.setResultHandler(this);
+                mScannerView.startCamera(camId);
             } else {
                 requestPermission();
             }
@@ -116,8 +110,8 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
     @Override
     public void onDestroy() {
         super.onDestroy();
-        zXingScannerView.stopCamera();
-        zXingScannerView = null;
+        mScannerView.stopCamera();
+        mScannerView = null;
     }
 
     @Override
@@ -127,30 +121,23 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
         Log.e("QRCodeScanner", rawResult.getText());
         Log.e("QRCodeScanner", rawResult.getBarcodeFormat().toString());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewActivity.this);
-        builder.setTitle("Scan Result");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                zXingScannerView.resumeCameraPreview(NewActivity.this);
-            }
-        });
-        builder.setNeutralButton("Visit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result));
-                startActivity(browserIntent);
-            }
-        });
-        builder.setMessage(rawResult.getText());
-        AlertDialog alert1 = builder.create();
-        alert1.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Scan Result");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mScannerView.resumeCameraPreview(QrCodeScannerActivity.this);
+                    }
+                });
+                builder.setNeutralButton("Visit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                      Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result));
+                        startActivity(browserIntent);
+                    }
+                });
+                builder.setMessage(rawResult.getText());
+                AlertDialog alert1 = builder.create();
+                alert1.show();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        zXingScannerView.stopCamera();
-    }
-
 }
