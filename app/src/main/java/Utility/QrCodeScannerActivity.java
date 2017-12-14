@@ -30,8 +30,8 @@ public class QrCodeScannerActivity extends AppCompatActivity implements ZXingSca
 
         mScannerView = new ZXingScannerView(this);
         setContentView(mScannerView);
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
                 Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
             } else {
@@ -80,7 +80,7 @@ public class QrCodeScannerActivity extends AppCompatActivity implements ZXingSca
     }
 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new android.support.v7.app.AlertDialog.Builder(QrCodeScannerActivity.this)
+        new AlertDialog.Builder(QrCodeScannerActivity.this)
                 .setMessage(message)
                 .setPositiveButton("OK", okListener)
                 .setNegativeButton("Cancel", null)
@@ -92,8 +92,8 @@ public class QrCodeScannerActivity extends AppCompatActivity implements ZXingSca
     public void onResume() {
         super.onResume();
 
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        if (currentapiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
                 if(mScannerView == null) {
                     mScannerView = new ZXingScannerView(this);
