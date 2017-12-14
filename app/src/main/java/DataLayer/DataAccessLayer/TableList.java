@@ -1,12 +1,13 @@
 package DataLayer.DataAccessLayer;
 
+import android.database.sqlite.*;
 import DataLayer.Item;
-
-
 
 /**
  * Created by nilskjellbeck on 13.12.17.
  */
+
+enum TableType {MUSIC, BOOKS, MOVIES, GAMES, CUSTOM}
 
 public class TableList {
 
@@ -14,8 +15,7 @@ public class TableList {
     private String tableName;
     private Item[] itemList;
 
-
-/* Constructor */
+    /* Constructor */
     public TableList() {
 
     };
@@ -41,8 +41,8 @@ public class TableList {
 /* Methods */
 
     /* Creates a new table in the DB */
-    public void createTable(String tableName) {
-
+    public void createTable() {
+        SQLiteDatabase db;
     };
 
     /* Opens and gets the data out of a DB */

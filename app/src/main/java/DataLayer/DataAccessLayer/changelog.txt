@@ -1,0 +1,3 @@
+14.12.2017
+- Removed paramter from method "createTable" in the TableList Class
+- Added ListType enum
