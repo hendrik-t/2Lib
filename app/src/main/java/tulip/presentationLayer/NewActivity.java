@@ -129,17 +129,16 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
 
         AlertDialog.Builder builder = new AlertDialog.Builder(NewActivity.this);
         builder.setTitle("Scan Result");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Add to List", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 zXingScannerView.resumeCameraPreview(NewActivity.this);
             }
         });
-        builder.setNeutralButton("Visit", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result));
-                startActivity(browserIntent);
+                zXingScannerView.resumeCameraPreview(NewActivity.this);
             }
         });
         builder.setMessage(rawResult.getText());
