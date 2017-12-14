@@ -54,8 +54,9 @@ public class BarcodeScanner {
     };
 
     /* Allows user to enter a code manually */
-    public void manualInput() {
-
+    public String manualInput() {
+        String eanInput = "";
+        return eanInput;
     };
 
     /* closes mobile phones camera-preview */
