@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">2Lib</string>
+    <string name="menu_settings">Settings</string>
+    <string name="Scan">Button</string>
 </resources>
