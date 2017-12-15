@@ -1,2 +1,5 @@
 14.12.2017
-- Added ListType enum
+- Changed classdesign of the TableList Class
+15.12.2017
+- Created the SQLiteHelper Class
+- Wrote the createTable method

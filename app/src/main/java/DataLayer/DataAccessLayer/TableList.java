@@ -52,9 +52,10 @@ public class TableList {
             statement += "'" + columnNames[i] + "' string";
             if(i != columnNames.length-1) { statement += ", "; }
         }
-        statement += ")";
+        statement += ");";
 
         db.execSQL(statement);
+        db.execSQL("drop table " + tableName + ";"); // FOR EARLY TESTING, REMOVE IN FINAL
     }
 
     /* Opens and gets the data out of a DB */
