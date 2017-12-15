@@ -1,14 +1,14 @@
 package DataLayer.DataAccessLayer;
 
-import android.database.sqlite.*;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import DataLayer.Item;
 
 /**
  * Created by nilskjellbeck on 13.12.17.
  * Last edited by Hendrik Tete on 14.12.17
  */
-
-enum TableType {MUSIC, BOOKS, MOVIES, GAMES, CUSTOM}
 
 public class TableList {
 
@@ -42,9 +42,20 @@ public class TableList {
 /* Methods */
 
     /* Creates a new table in the DB */
-    public void createTable() {
-        SQLiteDatabase db;
-    };
+    public void createTable(Context context, String[] columnNames) {
+        // Creates a database connection
+        SQLiteDatabase db = new SQLiteHelper(context).getDatabaseWritable();
+
+        // Prepares Statement
+        String statement = "create table " + tableName + "(";
+        for(int i = 0; i < columnNames.length; i++) {
+            statement += "'" + columnNames[i] + "' string";
+            if(i != columnNames.length-1) { statement += ", "; }
+        }
+        statement += ")";
+
+        db.execSQL(statement);
+    }
 
     /* Opens and gets the data out of a DB */
     public TableList openTable(String tableName) {
@@ -52,21 +63,21 @@ public class TableList {
     TableList a = new TableList();
 
     return a;
-    };
+    }
 
     /* adds an Item to the DB */
     public void addItem(Item item) {
 
-    };
+    }
 
     /* deletes an Item from the DB */
     public void deleteItem(Item item) {
 
-    };
+    }
 
     /* edits an Item in the DB */
     public void editItem(Item itemOld, Item itemNew) {
 
-    };
+    }
 
 }
