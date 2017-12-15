@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.google.zxing.Result;
 
+import DataLayer.Item;
 import Utility.QrCodeScannerActivity;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import static android.Manifest.permission.CAMERA;
@@ -132,6 +133,8 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
         builder.setPositiveButton("Add to List", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Item i = new Item();
+                i.addEntryToHashMap("barcode", result );
                 zXingScannerView.resumeCameraPreview(NewActivity.this);
             }
         });
