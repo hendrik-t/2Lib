@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 public class MainActivity extends Activity {
 
     /** Attributes **/
-    Button button1,button2,button3,button4;
+    Button scanButton, searchButton, openMyListButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,24 +25,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         /** Locate the button in activity_main.xml **/
-        button1 = (Button) findViewById(R.id.scanButton);
-        button2 = (Button) findViewById(R.id.searchButton);
-        button3 = (Button) findViewById(R.id.openMyListButton);
+        scanButton = (Button) findViewById(R.id.scanButton);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        openMyListButton = (Button) findViewById(R.id.openMyListButton);
 
 
-        /** Capture button1 clicks **/
-        button1.setOnClickListener(new OnClickListener() {
+        /** Capture scanButton clicks **/
+        scanButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
                 /** Start NewActivity.class **/
                 Intent myIntent = new Intent(MainActivity.this,
-                        NewActivity.class);
+                        ScanActivity.class);
                 startActivity(myIntent);
             }
         });
 
-        /** Capture button2 clicks **/
-        button2.setOnClickListener(new OnClickListener() {
+        /** Capture searchButton clicks **/
+        searchButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
                 /** Instantiate an AlertDialog.Builder with its constructor **/
@@ -84,8 +84,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        /** Capture button3 clicks **/
-        button3.setOnClickListener(new OnClickListener() {
+        /** Capture openMyListButton clicks **/
+        openMyListButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
                 /** Start NewActivity.class **/
