@@ -13,40 +13,49 @@
         android:layout_height="match_parent" >
 
         <Button
-            android:id="@+id/scanButton"
+            android:id="@+id/createBookList"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="130dp"
-            android:text="Scan" />
+            android:text="Books" />
 
         <Button
-            android:id="@+id/searchButton"
+            android:id="@+id/createMovieList"
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:layout_alignStart="@+id/scanButton"
-            android:layout_below="@+id/scanButton"
+            android:layout_alignStart="@+id/createBookList"
+            android:layout_below="@+id/createBookList"
             android:layout_marginTop="12dp"
-            android:text="manual input" />
+            android:text="Movies" />
 
         <Button
-            android:id="@+id/openMyListButton"
+            android:id="@+id/createMusicList"
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:layout_alignStart="@+id/searchButton"
-            android:layout_below="@+id/searchButton"
+            android:layout_alignStart="@+id/createMovieList"
+            android:layout_below="@+id/createMovieList"
             android:layout_marginTop="12dp"
-            android:text="My lists" />
+            android:text="Music" />
 
         <Button
-            android:id="@+id/createList"
+            android:id="@+id/createGameList"
             android:layout_width="match_parent"
             android:layout_height="100px"
-            android:layout_alignStart="@+id/openMyListButton"
-            android:layout_below="@+id/openMyListButton"
+            android:layout_alignStart="@+id/createMusicList"
+            android:layout_below="@+id/createMusicList"
             android:layout_marginTop="12dp"
-            android:text="create new List" />
+            android:text="games" />
+
+        <Button
+            android:id="@+id/createCustomList"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_alignStart="@+id/createGameList"
+            android:layout_below="@+id/createGameList"
+            android:layout_marginTop="12dp"
+            android:text="custom" />
 
         <TextView
             android:id="@+id/menuHeader"
@@ -56,7 +65,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="10pt"
             android:layout_marginTop="50dp"
-            android:text="Menu" />
+            android:text="create a new list" />
     </RelativeLayout>
 
 
