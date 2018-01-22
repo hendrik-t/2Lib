@@ -1,6 +1,6 @@
 package tulip.presentationLayer;
 
-import android.app.Activity;
+import android.app.*;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 public class MainActivity extends Activity {
 
     /** Attributes **/
-    Button button1,button2;
+    Button button1,button2,button3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
         /** Locate the button in activity_main.xml **/
         button1 = (Button) findViewById(R.id.scanButton);
         button2 = (Button) findViewById(R.id.searchButton);
+        button3 = (Button) findViewById(R.id.openMyListButton);
 
 
         /** Capture button1 clicks **/
@@ -80,6 +81,17 @@ public class MainActivity extends Activity {
                 /** Open the Soft Keyboard for user and shows dialog **/
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 dialog.show();
+            }
+        });
+
+        /** Capture button3 clicks **/
+        button3.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+
+                /** Start NewActivity.class **/
+                Intent myIntent = new Intent(MainActivity.this,
+                        ListActivity.class);
+                startActivity(myIntent);
             }
         });
     }
