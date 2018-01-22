@@ -1,6 +1,6 @@
 package tulip.presentationLayer;
 
-import android.app.Activity;
+import android.app.*;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 public class MainActivity extends Activity {
 
     /** Attributes **/
-    Button scanButton, manualInputButton, openMyListButton;
+    Button button1,button2,button3,button4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,24 +25,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         /** Locate the button in activity_main.xml **/
-        scanButton = (Button) findViewById(R.id.scanButton);
-        manualInputButton = (Button) findViewById(R.id.searchButton);
-        openMyListButton = (Button) findViewById(R.id.openMyListButton);
+        button1 = (Button) findViewById(R.id.scanButton);
+        button2 = (Button) findViewById(R.id.searchButton);
+        button3 = (Button) findViewById(R.id.openMyListButton);
 
 
-        /** Capture scanButton clicks **/
-        scanButton.setOnClickListener(new OnClickListener() {
+        /** Capture button1 clicks **/
+        button1.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
-                /** Start ScanActivity.class **/
+                /** Start NewActivity.class **/
                 Intent myIntent = new Intent(MainActivity.this,
-                        ScanActivity.class);
+                        NewActivity.class);
                 startActivity(myIntent);
             }
         });
 
-        /** Capture manualInputButton clicks **/
-        manualInputButton.setOnClickListener(new OnClickListener() {
+        /** Capture button2 clicks **/
+        button2.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
                 /** Instantiate an AlertDialog.Builder with its constructor **/
@@ -84,11 +84,11 @@ public class MainActivity extends Activity {
             }
         });
 
-        /** Capture openMyListButton clicks **/
-        scanButton.setOnClickListener(new OnClickListener() {
+        /** Capture button3 clicks **/
+        button3.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 
-                /** Start ScanActivity.class **/
+                /** Start NewActivity.class **/
                 Intent myIntent = new Intent(MainActivity.this,
                         ListActivity.class);
                 startActivity(myIntent);
