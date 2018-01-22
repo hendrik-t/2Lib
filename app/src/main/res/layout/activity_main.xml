@@ -4,18 +4,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- The main content view -->
     <RelativeLayout
         android:id="@+id/mainContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp">
 
         <Button
             android:id="@+id/scanButton"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="130dp"
@@ -24,7 +27,7 @@
         <Button
             android:id="@+id/searchButton"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_alignStart="@+id/scanButton"
             android:layout_below="@+id/scanButton"
             android:layout_marginTop="12dp"
@@ -33,7 +36,7 @@
         <Button
             android:id="@+id/openMyListButton"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_alignStart="@+id/searchButton"
             android:layout_below="@+id/searchButton"
             android:layout_marginTop="12dp"
@@ -42,7 +45,7 @@
         <Button
             android:id="@+id/createList"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_alignStart="@+id/openMyListButton"
             android:layout_below="@+id/openMyListButton"
             android:layout_marginTop="12dp"

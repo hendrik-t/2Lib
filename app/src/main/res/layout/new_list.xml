@@ -10,7 +10,9 @@
     <RelativeLayout
         android:id="@+id/mainContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp" >
 
         <Button
             android:id="@+id/createBookList"
