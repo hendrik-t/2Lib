@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
         /* Capture button2 clicks */
         button2.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-/*
                 // 1. Instantiate an AlertDialog.Builder with its constructor
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
@@ -92,13 +91,6 @@ public class MainActivity extends Activity {
                 // 3. Get the AlertDialog from create()
                 AlertDialog dialog = builder.create();
                 dialog.show();
-*/
-                TableList table1 = new TableList();
-                table1.setTableName("testTable");
-                String[] columns = new String[2];
-                columns[0] = "att1";
-                columns[1] = "att2";
-                table1.createTable(getApplicationContext(), columns);
             }
         });
     }

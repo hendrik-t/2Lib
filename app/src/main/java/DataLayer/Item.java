@@ -1,6 +1,6 @@
 package DataLayer;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 
 /**
@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Item {
 
 /* Attributes */
-    private HashMap itemMap;
+    private LinkedHashMap itemMap;
 
 
 /* Constructor */
@@ -26,12 +26,12 @@ public class Item {
     };
 
 /* Getter */
-    public HashMap getItemMap() {
+    public LinkedHashMap getItemMap() {
         return itemMap;
     }
 
 /* Setter */
-    public void setItemMap(HashMap itemMap) {
+    public void setItemMap(LinkedHashMap itemMap) {
         this.itemMap = itemMap;
     }
 
