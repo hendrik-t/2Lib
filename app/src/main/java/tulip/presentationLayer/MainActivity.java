@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 public class MainActivity extends Activity {
 
     /** Attributes **/
-    Button button1,button2,button3;
+    Button button1,button2,button3,button4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
