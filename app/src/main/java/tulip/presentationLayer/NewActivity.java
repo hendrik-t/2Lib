@@ -38,10 +38,10 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
 
         zXingScannerView = new ZXingScannerView(this);
         setContentView(zXingScannerView);
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M) {
+        int currentApiVersion = Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
-                Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
             } else {
                 requestPermission();
             }
@@ -99,8 +99,8 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
     public void onResume() {
         super.onResume();
 
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M) {
+        int currentApiVersion = Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
                 if(zXingScannerView == null) {
                     zXingScannerView = new ZXingScannerView(this);
