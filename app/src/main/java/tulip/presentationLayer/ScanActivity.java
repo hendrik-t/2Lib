@@ -1,10 +1,8 @@
 package tulip.presentationLayer;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,13 +10,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 import com.google.zxing.Result;
 
 import DataLayer.Item;
-import Utility.QrCodeScannerActivity;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import static android.Manifest.permission.CAMERA;
 
@@ -26,7 +21,7 @@ import static android.Manifest.permission.CAMERA;
  * Created by nilskjellbeck on 14.12.17.
  */
 
-public class NewActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class ScanActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView zXingScannerView;
@@ -128,20 +123,20 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
         Log.e("QRCodeScanner", rawResult.getText());
         Log.e("QRCodeScanner", rawResult.getBarcodeFormat().toString());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScanActivity.this);
         builder.setTitle("Scan Result");
         builder.setPositiveButton("Add to List", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Item i = new Item();
                 i.addEntryToHashMap("barcode", result );
-                zXingScannerView.resumeCameraPreview(NewActivity.this);
+                zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
         builder.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                zXingScannerView.resumeCameraPreview(NewActivity.this);
+                zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
         builder.setMessage(rawResult.getText());

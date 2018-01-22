@@ -1,18 +1,18 @@
 package tulip.presentationLayer;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.view.View.OnClickListener;
 
-public class MainActivity extends Activity {
+public class ListActivity extends Activity {
 
     /** Attributes **/
     Button scanButton, manualInputButton, openMyListButton;
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 /** Start ScanActivity.class **/
-                Intent myIntent = new Intent(MainActivity.this,
+                Intent myIntent = new Intent(ListActivity.this,
                         ScanActivity.class);
                 startActivity(myIntent);
             }
@@ -46,14 +46,14 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 /** Instantiate an AlertDialog.Builder with its constructor **/
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
 
                 /** Sets up some characteristics of the dialog **/
                 builder.setMessage("Please enter the EAN-Code manually.");
                 builder.setTitle("Manual Search");
 
                 /** Set up the input **/
-                final EditText input = new EditText(MainActivity.this);
+                final EditText input = new EditText(ListActivity.this);
 
                 /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
                 input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 /** Start ScanActivity.class **/
-                Intent myIntent = new Intent(MainActivity.this,
+                Intent myIntent = new Intent(ListActivity.this,
                         ListActivity.class);
                 startActivity(myIntent);
             }
