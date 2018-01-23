@@ -15,6 +15,13 @@ import android.view.View.OnClickListener;
 import DataLayer.DataAccessLayer.TableList;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+/**
+ * created by nilskjellbeck on 12.12.17
+ * changed by Kevin Struckmeyer on 13.12.17
+ * changed by Kevin Struckmeyer on 22.01.18
+ * changed by nilskjellbeck on 23.01.18
+ */
+
 public class MainActivity extends Activity {
 
     /** Attributes **/
