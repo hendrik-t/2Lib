@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+created by nilskjellbeck on 14.12.17
+changed by nilskjellbeck on 22.01.18
+changed by Kevin Struckmeyer on 23.01.18
+-->
+
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

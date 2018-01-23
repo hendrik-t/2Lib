@@ -1,9 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 Created by Kevin Struckmeyer on 22.01.18
 -->
-<?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout
+<android.widget.RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
@@ -18,4 +18,22 @@ Created by Kevin Struckmeyer on 22.01.18
         android:divider="@color/colorPrimary">
     </ListView>
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/newListButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/plus"
+        android:layout_marginLeft="325dp"
+        android:layout_marginTop="450dp">
+
+    </Button>
+
+
+   <!-- <ImageButton
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageButton"
+        android:elevation="10dp"
+        android:src="@drawable/icon" /> -->
+
+</android.widget.RelativeLayout>

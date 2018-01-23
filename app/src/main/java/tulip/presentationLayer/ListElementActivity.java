@@ -3,6 +3,9 @@ package tulip.presentationLayer;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * created by nilskjellbeck on 23.01.18
+ */
 
 public class ListElementActivity extends Activity {
 
