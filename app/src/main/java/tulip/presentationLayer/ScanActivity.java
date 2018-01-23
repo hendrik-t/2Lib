@@ -1,10 +1,8 @@
 package tulip.presentationLayer;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,14 +10,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 import com.google.zxing.Result;
 
-import DataLayer.DataAccessLayer.TableList;
 import DataLayer.Item;
-import Utility.QrCodeScannerActivity;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import static android.Manifest.permission.CAMERA;
 
@@ -27,7 +21,7 @@ import static android.Manifest.permission.CAMERA;
  * Created by nilskjellbeck on 14.12.17.
  */
 
-public class NewActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class ScanActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView zXingScannerView;
@@ -39,10 +33,10 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
 
         zXingScannerView = new ZXingScannerView(this);
         setContentView(zXingScannerView);
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M) {
+        int currentApiVersion = Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
-                Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
             } else {
                 requestPermission();
             }
@@ -100,8 +94,8 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
     public void onResume() {
         super.onResume();
 
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        if (currentapiVersion >= Build.VERSION_CODES.M) {
+        int currentApiVersion = Build.VERSION.SDK_INT;
+        if (currentApiVersion >= Build.VERSION_CODES.M) {
             if (checkPermission()) {
                 if(zXingScannerView == null) {
                     zXingScannerView = new ZXingScannerView(this);
@@ -129,23 +123,20 @@ public class NewActivity extends Activity implements ZXingScannerView.ResultHand
         Log.e("QRCodeScanner", rawResult.getText());
         Log.e("QRCodeScanner", rawResult.getBarcodeFormat().toString());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScanActivity.this);
         builder.setTitle("Scan Result");
         builder.setPositiveButton("Add to List", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Item item = new Item();
-                item.addEntryToHashMap("barcode", result );
-                TableList table = new TableList(getApplicationContext(), "");
-                table.setTableName("testTable");
-                table.addItem(item);
-                zXingScannerView.resumeCameraPreview(NewActivity.this);
+                Item i = new Item();
+                i.addEntryToHashMap("barcode", result );
+                zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
         builder.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                zXingScannerView.resumeCameraPreview(NewActivity.this);
+                zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
         builder.setMessage(rawResult.getText());
