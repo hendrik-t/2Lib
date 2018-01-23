@@ -43,7 +43,7 @@ public class TableList {
     /* Creates a new table in the DB */
     public void createTable(String tableName, String[] columnNames) {
         // Prepares Statement
-        String statement = "create table " + tableName + "(";
+        String statement = "create table if not exists " + tableName + "(";
         for(int i = 0; i < columnNames.length; i++) {
             statement += "'" + columnNames[i] + "' string";
             if(i != columnNames.length-1) { statement += ", "; }
@@ -87,17 +87,19 @@ public class TableList {
 
 
     /* Returns a string array with the names of the existing tables */
-    public ArrayList<String> getTableNames() {
+    public String[] getTableNames() {
         ArrayList<String> tableNames = new ArrayList<String>();
 
-        Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name!='android_metadata'", null);
         if(cur.moveToFirst()) {
             while(!cur.isAfterLast()) {
                 tableNames.add(cur.getString(cur.getColumnIndex("name")));
                 cur.moveToNext();
             }
         }
-        return tableNames;
+        String tableNames1[] = tableNames.toArray(new String[0]);
+
+        return tableNames1;
     }
 
 
