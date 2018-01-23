@@ -3,12 +3,15 @@ package DataLayer.DataAccessLayer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import DataLayer.Item;
 
 /**
  * Created by nilskjellbeck on 13.12.17.
- * Last edited by Hendrik Tete on 14.12.17
+ * Last edited by Hendrik Tete on 23.01.18
  */
 
 public class TableList {
@@ -83,10 +86,25 @@ public class TableList {
     }
 
 
+    /* Returns a string array with the names of the existing tables */
+    public ArrayList<String> getTableNames() {
+        ArrayList<String> tableNames = new ArrayList<String>();
+
+        Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if(cur.moveToFirst()) {
+            while(!cur.isAfterLast()) {
+                tableNames.add(cur.getString(cur.getColumnIndex("name")));
+                cur.moveToNext();
+            }
+        }
+        return tableNames;
+    }
+
+
     /* Returns a String array with the columns of a specified table */
-    public String[] getColumnNames(String tableName) {
+    public ArrayList<String> getColumnNames(String tableName) {
         Cursor dbCursor = db.query(tableName, null, null, null, null, null, null);
-        return dbCursor.getColumnNames();
+        return new ArrayList<>(Arrays.asList(dbCursor.getColumnNames()));
     }
 
 }
