@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,25 +18,11 @@ import DataLayer.Item;
 public class TableList {
 
 /* Attributes */
-    private Context context;
     SQLiteDatabase db;
 
-    private Item[] itemList;
-
-    /* Constructor */
+/* Constructor */
     public TableList(Context context) {
-        this.context = context;
         this.db = new SQLiteHelper(context).getWritableDatabase();
-    }
-
-/* Getter */
-    public Item[] getItemList() {
-        return itemList;
-    }
-
-/* Setter */
-    public void setItemList(Item[] itemList) {
-        this.itemList = itemList;
     }
 
 /* Methods */
@@ -43,7 +30,7 @@ public class TableList {
     /* Creates a new table in the DB */
     public void createTable(String tableName, String[] columnNames) {
         // Prepares Statement
-        String statement = "create table " + tableName + "(";
+        String statement = "CREATE TABLE IF NOT EXISTS " + tableName + "(";
         for(int i = 0; i < columnNames.length; i++) {
             statement += "'" + columnNames[i] + "' string";
             if(i != columnNames.length-1) { statement += ", "; }
@@ -55,22 +42,36 @@ public class TableList {
     }
 
 
-    /* Opens and gets the data out of a DB */
-    public TableList openTable(String tableName) {
+    /* Gets the data out of an existing table */
+    public ArrayList<Item> open(String tableName) {
+        ArrayList<Item> items = new ArrayList<Item>();
 
-    TableList a = new TableList(context);
+        
 
-    return a;
+        return items;
     }
 
 
-    /* adds an Item to the DB */
+    /* Adds an Item to the DB-Table */
     public void addItem(String tableName, Item item) {
+        ArrayList<String> columns = getColumnNames(tableName);
+
+        /* fill in column names */
         String statement = "insert into " + tableName + " (";
-        for(int i = 0; i < item.getItemMap().size(); i++) {
-            statement += "'" + item.getItemMap() + "'";
-            if(i != item.getItemMap().size()-1) { statement += ", "; }
+        for(int i = 0; i < columns.size(); i++) {
+            statement += "'" + columns.get(i) + "'";
+            if(i != columns.size()-1) { statement += ", "; }
         }
+
+        /* fill in corresponding values */
+        statement += ") values (";
+        for(int i = 0; i < columns.size(); i++) {
+            statement += "'" + item.getItemMap().get(columns.get(i)).toString() + "'";
+            if(i != columns.size()-1) { statement += ", "; }
+        }
+        statement += ");";
+
+        db.execSQL(statement);
     }
 
 
@@ -87,17 +88,17 @@ public class TableList {
 
 
     /* Returns a string array with the names of the existing tables */
-    public ArrayList<String> getTableNames() {
+    public String[] getTableNames() {
         ArrayList<String> tableNames = new ArrayList<String>();
 
-        Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        Cursor cur = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name!='android_metadata' order by name", null);
         if(cur.moveToFirst()) {
             while(!cur.isAfterLast()) {
                 tableNames.add(cur.getString(cur.getColumnIndex("name")));
                 cur.moveToNext();
             }
         }
-        return tableNames;
+        return tableNames.toArray(new String[0]);
     }
 
 
