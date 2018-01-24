@@ -3,3 +3,6 @@
 15.12.2017
 - Created the SQLiteHelper Class
 - Wrote the createTable method
+23.01.2018
+- Implemented the getColumnNames, getTableNames and addItem methods
+- removed unnecessary TableList parameters: Context and tableName
