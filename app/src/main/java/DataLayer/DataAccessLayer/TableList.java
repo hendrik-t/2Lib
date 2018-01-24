@@ -28,12 +28,12 @@ public class TableList {
 /* Methods */
 
     /* Creates a new table in the DB */
-    public void createTable(String tableName, String[] columnNames) {
+    public void createTable(String tableName, ArrayList<String> columnNames) {
         // Prepares Statement
         String statement = "CREATE TABLE IF NOT EXISTS " + tableName + "(";
-        for(int i = 0; i < columnNames.length; i++) {
-            statement += "'" + columnNames[i] + "' string";
-            if(i != columnNames.length-1) { statement += ", "; }
+        for(int i = 0; i < columnNames.size(); i++) {
+            statement += "'" + columnNames.get(i) + "' string";
+            if(i != columnNames.size()-1) { statement += ", "; }
         }
         statement += ");";
 
