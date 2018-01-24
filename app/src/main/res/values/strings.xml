@@ -3,4 +3,6 @@
     <string name="menu_settings">Settings</string>
     <string name="Scan">Button</string>
     <string name="Search">Button</string>
+    <string name="Listname"></string>
+    <string name="Columnname"></string>
 </resources>

@@ -54,15 +54,20 @@ public class ListActivity extends Activity {
                 android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getApplicationContext());
 
                 /** Sets up some characteristics of the dialog **/
-                builder.setMessage("Please enter the EAN-Code manually.");
-                builder.setTitle("Manual Search");
+                builder.setMessage("Please enter a List- and Columnnames.");
+                builder.setTitle("Create new List");
 
                 /** Set up the input **/
                 final EditText input = new EditText(getApplicationContext());
+                final EditText input1 = new EditText(getApplicationContext());
+
 
                 /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
+
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input1);
 
                 /** Sets the cursors into the input field **/
                 input.requestFocus();
