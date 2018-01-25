@@ -1,22 +1,21 @@
 package tulip.presentationLayer;
 
-import android.app.*;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.*;
 import android.text.InputType;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import DataLayer.DataAccessLayer.TableList;
 
@@ -45,6 +44,7 @@ public class ListActivity extends Activity {
 
         floatButton = (Button) findViewById(R.id.newListButton);
         simpleList = (ListView)findViewById(R.id.listView);
+        registerForContextMenu(simpleList);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
         simpleList.setAdapter(arrayAdapter);
@@ -61,24 +61,26 @@ public class ListActivity extends Activity {
                 View dialogView = inflater.inflate(R.layout.dialog_add_table, null);
 
                 /** Sets up some characteristics of the dialog **/
-                builder.setMessage("Please enter the name for your new list.");
                 builder.setTitle("Create new List");
+                builder.setMessage("Please enter the specifications for your new list.");
 
                 /** Set up the input **/
-                final EditText input = (EditText) dialogView.findViewById(R.id.listname);
-                final EditText input1 = (EditText) dialogView.findViewById(R.id.columnname0);
+                final EditText inputTitle = (EditText) dialogView.findViewById(R.id.listname);
+                final EditText inputColumn = (EditText) dialogView.findViewById(R.id.columnname0);
 
                 /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-                input1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                inputTitle.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                 builder.setView(dialogView);
 
                 /** Add the buttons and their functionalities **/
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        /** STILL NEED EXCEPTION HANDLING */
+
                         ArrayList<String> columns = new ArrayList<>();
-                        columns.add(input1.getText().toString());
-                        new TableList(getApplicationContext()).createTable(input.getText().toString(), columns);
+                        columns.add(inputColumn.getText().toString());
+                        new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
 
                         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
                         simpleList.setAdapter(arrayAdapter);
@@ -99,9 +101,35 @@ public class ListActivity extends Activity {
         });
 
 
-
-
         // TableList.getTablenames
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Add Item");
+        menu.add("Rename");
+        menu.add("Delete");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if(item.getTitle().equals("Add Item")) {
+
+            return true;
+        }
+        else if(item.getTitle().equals("Rename")) {
+
+            return true;
+        }
+        else if(item.getTitle().equals("Delete")) {
+
+            return true;
+        }
+        return true;
+
     }
 
 }
