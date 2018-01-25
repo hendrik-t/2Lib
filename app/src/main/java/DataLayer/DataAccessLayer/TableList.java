@@ -42,6 +42,13 @@ public class TableList {
     }
 
 
+    /* Deletes a table in the DB */
+    public void deleteTable(String tableName) {
+        String statement = "DROP TABLE IF EXISTS " + tableName + ";";
+        db.execSQL(statement);
+    }
+
+
     /* Gets the data out of an existing table */
     public ArrayList<Item> open(String tableName) {
         ArrayList<Item> items = new ArrayList<Item>();

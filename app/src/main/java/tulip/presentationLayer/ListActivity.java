@@ -29,15 +29,16 @@ public class ListActivity extends Activity {
     /** Attributes **/
 
     ListView simpleList;
+    ArrayAdapter<String> arrayAdapter;
     Button floatButton;
+    String tableNames[];
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /** Init **/
-        TableList tableList = new TableList(getApplicationContext());
-        String tableNames[] = tableList.getTableNames();
+        tableNames = new TableList(getApplicationContext()).getTableNames();
 
         /** Get the view from list_activity.xml **/
         setContentView(R.layout.list_activity);
@@ -46,7 +47,7 @@ public class ListActivity extends Activity {
         simpleList = (ListView)findViewById(R.id.listView);
         registerForContextMenu(simpleList);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
         simpleList.setAdapter(arrayAdapter);
 
         floatButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +83,7 @@ public class ListActivity extends Activity {
                         columns.add(inputColumn.getText().toString());
                         new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
 
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
+                        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
                         simpleList.setAdapter(arrayAdapter);
                     }
                 });
@@ -116,6 +117,7 @@ public class ListActivity extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
+        /* Context Menu Click Event Handler */
         if(item.getTitle().equals("Add Item")) {
 
             return true;
@@ -125,6 +127,12 @@ public class ListActivity extends Activity {
             return true;
         }
         else if(item.getTitle().equals("Delete")) {
+            /* Call method to delete table */
+            new TableList(getApplicationContext()).deleteTable(tableNames[info.position]);
+
+            /* Update the ListView */
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
+            simpleList.setAdapter(arrayAdapter);
 
             return true;
         }
