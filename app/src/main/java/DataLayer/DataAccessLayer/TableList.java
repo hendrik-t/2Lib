@@ -38,13 +38,19 @@ public class TableList {
         statement += ");";
 
         db.execSQL(statement);
-        //db.execSQL("drop table " + tableName + ";"); // FOR EARLY TESTING, REMOVE IN FINAL
     }
 
 
     /* Deletes a table in the DB */
     public void deleteTable(String tableName) {
         String statement = "DROP TABLE IF EXISTS " + tableName + ";";
+        db.execSQL(statement);
+    }
+
+
+    /* Rename a table */
+    public void renameTable(String oldName, String newName) {
+        String statement = "ALTER TABLE " + oldName + " RENAME TO " + newName + ";";
         db.execSQL(statement);
     }
 

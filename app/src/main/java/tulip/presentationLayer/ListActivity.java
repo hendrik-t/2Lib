@@ -9,6 +9,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import DataLayer.DataAccessLayer.TableList;
 
@@ -75,7 +77,7 @@ public class ListActivity extends Activity {
                 builder.setView(dialogView);
 
                 /** Add the buttons and their functionalities **/
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         /** STILL NEED EXCEPTION HANDLING */
 
@@ -115,7 +117,7 @@ public class ListActivity extends Activity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         /* Context Menu Click Event Handler */
         if(item.getTitle().equals("Add Item")) {
@@ -123,6 +125,67 @@ public class ListActivity extends Activity {
             return true;
         }
         else if(item.getTitle().equals("Rename")) {
+            /** Instantiate an AlertDialog.Builder with its constructor **/
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+
+            /** Sets up some characteristics of the dialog **/
+            builder.setTitle("Rename");
+            builder.setMessage("No spaces or names that are already used.");
+
+            /** Set up the input **/
+            final EditText input = new EditText(ListActivity.this);
+
+            /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            /** Sets the cursors into the input field **/
+            input.requestFocus();
+
+
+            /** Add the buttons and their functionalities **/
+            builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // Event Handler a bit below
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            /** Get the AlertDialog from create() **/
+            final
+            AlertDialog dialog = builder.create();
+
+            /** Open the Soft Keyboard for user and shows dialog **/
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v) {
+                    /* If the input isnt empty, doesnt contain spaces and no table with that name already exists */
+                    if((!input.getText().toString().isEmpty() && !input.getText().toString().contains(" ")) && !Arrays.asList(tableNames).contains(input.getText().toString())) {
+                        /* Rename table in DB */
+                        new TableList(getApplicationContext()).renameTable(tableNames[info.position], input.getText().toString());
+
+                        /* Update the ListView */
+                        tableNames = new TableList(getApplicationContext()).getTableNames();
+                        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                        simpleList.setAdapter(arrayAdapter);
+
+                        /* Close Alert Dialog */
+                        dialog.dismiss();
+                    } else {
+
+                        
+                    }
+                }
+            });
 
             return true;
         }
@@ -131,7 +194,8 @@ public class ListActivity extends Activity {
             new TableList(getApplicationContext()).deleteTable(tableNames[info.position]);
 
             /* Update the ListView */
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
+            tableNames = new TableList(getApplicationContext()).getTableNames();
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
             simpleList.setAdapter(arrayAdapter);
 
             return true;
