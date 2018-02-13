@@ -3,6 +3,7 @@ package tulip.presentationLayer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -54,6 +55,20 @@ public class ListActivity extends Activity {
 
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
         simpleList.setAdapter(arrayAdapter);
+
+        simpleList.setClickable(true);
+        simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Object o = simpleList.getItemAtPosition(position);
+
+                /** Start ListElementActivity.class **/
+                Intent myIntent = new Intent(ListActivity.this,
+                        ListElementActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
 
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +164,8 @@ public class ListActivity extends Activity {
 
             });
         }
+
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
