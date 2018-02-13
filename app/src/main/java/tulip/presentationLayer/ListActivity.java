@@ -35,7 +35,7 @@ public class ListActivity extends Activity {
     ArrayAdapter<String> arrayAdapter;
     Button floatButton;
     String tableNames[];
-    final String template[] = {"Books", "Games", "Movies", "Music", "Custom"};
+    CharSequence[] template = {"Books", "Games", "Movies", "Music", "Custom"};
     int saveInput=0;
 
     @Override
@@ -59,13 +59,13 @@ public class ListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /** Instantiate an AlertDialog.Builder with its constructor **/
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(ListActivity.this);
+                AlertDialog.Builder builderSingleChoices = new AlertDialog.Builder(ListActivity.this);
 
                 /** Sets up some characteristics of the dialog **/
-                builder1.setTitle("Pick a List-Template");
-                builder1.setMessage("Select the kind of Template you need.");
+                builderSingleChoices.setTitle("Pick a List-Template");
+                // DONT TRY ADDING A MESSAGE, DOENST WORK!!!!
 
-                builder1.setSingleChoiceItems(template, -1, new DialogInterface.OnClickListener() {
+                builderSingleChoices.setSingleChoiceItems(template, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (template[which] == "Books") {
@@ -84,7 +84,7 @@ public class ListActivity extends Activity {
 
 
                 /** Add the buttons and their functionalities **/
-                builder1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                builderSingleChoices.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         /** Instantiate an AlertDialog.Builder with its constructor **/
@@ -133,14 +133,14 @@ public class ListActivity extends Activity {
 
                     }
                 });
-                builder1.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builderSingleChoices.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }
                 });
 
                 /** Get the AlertDialog from create() **/
-                AlertDialog dialog = builder1.create();
+                AlertDialog dialog = builderSingleChoices.create();
 
                 /** Shows Dialog **/
                 dialog.show();
