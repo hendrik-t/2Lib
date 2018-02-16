@@ -1,5 +1,6 @@
 package tulip.presentationLayer;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,12 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import DataLayer.DataAccessLayer.TableList;
+import DataLayer.Item;
 
 /**
  * created by nilskjellbeck on 22.01.18
@@ -60,11 +63,10 @@ public class ListActivity extends Activity {
         simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Object o = simpleList.getItemAtPosition(position);
-
                 /** Start ListElementActivity.class **/
                 Intent myIntent = new Intent(ListActivity.this,
                         ListElementActivity.class);
+                myIntent.putExtra("tableName", tableNames[position]);
                 startActivity(myIntent);
             }
         });
@@ -101,8 +103,25 @@ public class ListActivity extends Activity {
                 /** Add the buttons and their functionalities **/
                 builderSingleChoices.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        /* Books */
+                        if (saveInput == 1) {
 
-                        /** Instantiate an AlertDialog.Builder with its constructor **/
+                        }
+                        /* Games */
+                        else if (saveInput == 2) {
+
+                        }
+                        /* Movies */
+                        else if (saveInput == 3) {
+
+                        }
+                        /* Music */
+                        else if (saveInput == 4) {
+
+                        }
+                        /* Custom */
+                        else if (saveInput == 5) {
+                            /** Instantiate an AlertDialog.Builder with its constructor **/
                             AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
 
                             LayoutInflater inflater = getLayoutInflater();
@@ -124,14 +143,7 @@ public class ListActivity extends Activity {
                             /** Add the buttons and their functionalities **/
                             builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    /** STILL NEED EXCEPTION HANDLING */
-
-                                    ArrayList<String> columns = new ArrayList<>();
-                                    columns.add(inputColumn.getText().toString());
-                                    new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
-
-                                    arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, new TableList(getApplicationContext()).getTableNames());
-                                    simpleList.setAdapter(arrayAdapter);
+                                    // Button Handler a bit further down
                                 }
                             });
                             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -140,11 +152,37 @@ public class ListActivity extends Activity {
                                 }
                             });
 
-                        /** Get the AlertDialog from create() **/
-                        AlertDialog dialog1 = builder.create();
+                            /** Get the AlertDialog from create() **/
+                            final AlertDialog customListCreationDialog = builder.create();
 
-                        /** Shows dialog **/
-                        dialog1.show();
+                            /** Shows dialog **/
+                            customListCreationDialog.show();
+
+                            customListCreationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!inputTitle.getText().toString().isEmpty() && !inputTitle.getText().toString().contains(" ")
+                                            && !inputColumn.getText().toString().isEmpty() && !inputColumn.getText().toString().contains(" "))
+                                    {
+                                        /* Create the table */
+                                        ArrayList<String> columns = new ArrayList<>();
+                                        columns.add(inputColumn.getText().toString());
+                                        new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
+
+                                        /* Update List View */
+                                        tableNames = new TableList(getApplicationContext()).getTableNames();
+                                        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                        simpleList.setAdapter(arrayAdapter);
+
+                                        /* Close Alert Dialog */
+                                        customListCreationDialog.dismiss();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Fields can not be empty or contain spaces.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
 
                     }
                 });
@@ -159,7 +197,6 @@ public class ListActivity extends Activity {
 
                 /** Shows Dialog **/
                 dialog.show();
-
                 }
 
             });
@@ -176,11 +213,64 @@ public class ListActivity extends Activity {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
         final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         /* Context Menu Click Event Handler */
         if(item.getTitle().equals("Add Item")) {
+            /** Instantiate an AlertDialog.Builder with its constructor **/
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+
+            /** Sets up some characteristics of the dialog **/
+            builder.setTitle("Add Item");
+            builder.setMessage("Type in the values of the item you want to add.");
+
+            /** Set up the input **/
+            final EditText input = new EditText(ListActivity.this);
+
+            /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            /** Sets the cursors into the input field **/
+            input.requestFocus();
+
+
+            /** Add the buttons and their functionalities **/
+            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // Event Handler a bit below
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            /** Get the AlertDialog from create() **/
+            final
+            AlertDialog dialog = builder.create();
+
+            /** Open the Soft Keyboard for user and shows dialog **/
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v) {
+                    Item i = new Item();
+                    String value = input.getText().toString();
+                    i.addEntryToHashMap("name", value);
+                    new TableList(getApplicationContext()).addItem("testTable", i);
+
+                    /* Close Alert Dialog */
+                    dialog.dismiss();
+
+                }
+            });
 
             return true;
         }
@@ -240,9 +330,6 @@ public class ListActivity extends Activity {
 
                         /* Close Alert Dialog */
                         dialog.dismiss();
-                    } else {
-
-                        
                     }
                 }
             });

@@ -2,6 +2,7 @@ package DataLayer.DataAccessLayer;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.lang.reflect.Array;
@@ -57,9 +58,22 @@ public class TableList {
 
     /* Gets the data out of an existing table */
     public ArrayList<Item> open(String tableName) {
+        ArrayList<String> columns = getColumnNames(tableName);
         ArrayList<Item> items = new ArrayList<Item>();
 
-        
+        Cursor cur = db.rawQuery("SELECT * FROM " + tableName, null);
+        if (cur.moveToFirst()) {
+            while (!cur.isAfterLast()) {
+                ArrayList<String> values = new ArrayList<String>();
+                for (int i = 0; i < columns.size(); i++) {
+                    values.add(cur.getString(cur.getColumnIndex(columns.get(i))));
+                }
+                Item item = new Item(columns, values);
+                items.add(item);
+
+                cur.moveToNext();
+            }
+        }
 
         return items;
     }
@@ -89,8 +103,13 @@ public class TableList {
 
 
     /* deletes an Item from the DB */
-    public void deleteItem(Item item) {
-
+    public void deleteItem(String tableName, int pos) {
+        Cursor cur = db.rawQuery("SELECT rowid, * FROM " + tableName + ";", null);
+        if (cur.moveToFirst()) {
+            for (; pos > 0; pos--) { cur.moveToNext(); }
+            int id = cur.getInt(0);
+            db.execSQL("DELETE FROM " + tableName + " WHERE rowid=" + id + ";");
+        }
     }
 
 

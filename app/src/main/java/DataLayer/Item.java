@@ -1,5 +1,7 @@
 package DataLayer;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 
@@ -10,7 +12,7 @@ import java.util.LinkedHashMap;
 public class Item {
 
 /* Attributes */
-    private LinkedHashMap itemMap;
+    private LinkedHashMap itemMap = new LinkedHashMap();
 
 
 /* Constructor */
@@ -20,8 +22,14 @@ public class Item {
 
     /* Overloaded Constructor */
     public Item(String[] columns, String[] entries) {
-        for(int i=0; i<columns.length; i++) {
+        for(int i=0; i < columns.length; i++) {
             itemMap.put(columns[i], entries[i]);
+        }
+    };
+
+    public Item(ArrayList<String> columns, ArrayList<String> entries) {
+        for(int i=0; i < columns.size(); i++) {
+            itemMap.put(columns.get(i), entries.get(i));
         }
     };
 
