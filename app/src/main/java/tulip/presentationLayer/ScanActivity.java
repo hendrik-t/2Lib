@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.zxing.Result;
+import android.content.Intent;
 
 import DataLayer.Item;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -133,12 +134,22 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
                 zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
-        builder.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 zXingScannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
+        builder.setNeutralButton("ShowInfo", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(ScanActivity.this, JsoupActivity.class);
+                intent.putExtra("key", result); //Optional parameters
+                ScanActivity.this.startActivity(intent);
+
+            }
+        });
+
         builder.setMessage(rawResult.getText());
         AlertDialog alert1 = builder.create();
         alert1.show();
