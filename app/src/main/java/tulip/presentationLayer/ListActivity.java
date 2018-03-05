@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -122,26 +124,38 @@ public class ListActivity extends Activity {
                         /* Custom */
                         else if (saveInput == 5) {
                             /** Instantiate an AlertDialog.Builder with its constructor **/
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
-
-                            LayoutInflater inflater = getLayoutInflater();
-                            View dialogView = inflater.inflate(R.layout.dialog_add_table, null);
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+                            final LinearLayout layout = new LinearLayout(getApplicationContext());
+                            layout.setOrientation(LinearLayout.VERTICAL);
 
                             /** Sets up some characteristics of the dialog **/
                             builder.setTitle("Create new List");
                             builder.setMessage("Please enter the specifications for your new list.");
 
                             /** Set up the input **/
-                            final EditText inputTitle = (EditText) dialogView.findViewById(R.id.listname);
-                            final EditText inputColumn = (EditText) dialogView.findViewById(R.id.columnname0);
-
-                            /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
+                            final EditText inputTitle = new EditText(getApplicationContext());
                             inputTitle.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-                            inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-                            builder.setView(dialogView);
+                            inputTitle.setHint("List title");
+
+                            final EditText inputFirstColumn = new EditText(getApplicationContext());
+                            inputFirstColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                            inputFirstColumn.setHint("Property name");
+
+                            layout.addView(inputTitle);
+                            layout.addView(inputFirstColumn);
+
+                            final ArrayList<EditText> columnInputs = new ArrayList<EditText>();
+                            columnInputs.add(inputFirstColumn);
+
+                            builder.setView(layout);
 
                             /** Add the buttons and their functionalities **/
                             builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // Button Handler a bit further down
+                                }
+                            });
+                            builder.setNeutralButton("Add Property", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // Button Handler a bit further down
                                 }
@@ -162,12 +176,19 @@ public class ListActivity extends Activity {
                             {
                                 @Override
                                 public void onClick(View v) {
-                                    if (!inputTitle.getText().toString().isEmpty() && !inputTitle.getText().toString().contains(" ")
-                                            && !inputColumn.getText().toString().isEmpty() && !inputColumn.getText().toString().contains(" "))
-                                    {
+                                    if(!inputTitle.getText().toString().replace(" ", "").isEmpty()) {
                                         /* Create the table */
-                                        ArrayList<String> columns = new ArrayList<>();
-                                        columns.add(inputColumn.getText().toString());
+                                        ArrayList<String> columns = new ArrayList<String>();
+                                        for (int i = 0; i < columnInputs.size(); i++) {
+                                            if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                                                columns.add(columnInputs.get(i).getText().toString());
+                                            }
+                                        }
+
+                                        if (columns.isEmpty()) {
+
+                                        }
+
                                         new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
 
                                         /* Update List View */
@@ -178,7 +199,26 @@ public class ListActivity extends Activity {
                                         /* Close Alert Dialog */
                                         customListCreationDialog.dismiss();
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Fields can not be empty or contain spaces.", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+
+                            customListCreationDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v) {
+                                    final EditText inputColumn = new EditText(ListActivity.this);
+                                    inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                                    inputColumn.setHint("Property name");
+                                    layout.addView(inputColumn);
+                                    builder.setView(layout);
+
+                                    columnInputs.add(inputColumn);
+
+                                    if (columnInputs.size() == 9) {
+                                        Toast.makeText(getApplicationContext(), "Maximum amount reached", Toast.LENGTH_LONG).show();
+                                        customListCreationDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setClickable(false);
                                     }
                                 }
                             });
@@ -220,21 +260,26 @@ public class ListActivity extends Activity {
         if(item.getTitle().equals("Add Item")) {
             /** Instantiate an AlertDialog.Builder with its constructor **/
             AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+            LinearLayout layout = new LinearLayout(getApplicationContext());
+            layout.setOrientation(LinearLayout.VERTICAL);
 
             /** Sets up some characteristics of the dialog **/
             builder.setTitle("Add Item");
             builder.setMessage("Type in the values of the item you want to add.");
 
-            /** Set up the input **/
-            final EditText input = new EditText(ListActivity.this);
+            final ArrayList<EditText> inputs = new ArrayList<EditText>();
+            final ArrayList<String> columnNames = new TableList(getApplicationContext()).getColumnNames(tableNames[info.position]);
+            for (int i = 0; i < columnNames.size(); i++) {
+                /** Set up the inputs **/
+                inputs.add(new EditText(getApplicationContext()));
+                inputs.get(i).setHint(columnNames.get(i));
 
-            /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
-            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-            builder.setView(input);
+                /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
+                inputs.get(i).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
 
-            /** Sets the cursors into the input field **/
-            input.requestFocus();
-
+                layout.addView(inputs.get(i));
+            }
+            builder.setView(layout);
 
             /** Add the buttons and their functionalities **/
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -261,14 +306,20 @@ public class ListActivity extends Activity {
             {
                 @Override
                 public void onClick(View v) {
-                    Item i = new Item();
-                    String value = input.getText().toString();
-                    i.addEntryToHashMap("name", value);
-                    new TableList(getApplicationContext()).addItem("testTable", i);
+                    boolean inputsValid = true;
+                    for (int i = 0; i < columnNames.size(); i++) { if (inputs.get(i).getText().toString().replace(" ", "").isEmpty()) inputsValid = false; }
+                    if (inputsValid) {
+                        Item newItem = new Item();
+                        for (int i = 0; i < columnNames.size(); i++) {
+                            newItem.addEntryToHashMap(columnNames.get(i), inputs.get(i).getText().toString());
+                        }
+                        new TableList(getApplicationContext()).addItem(tableNames[info.position], newItem);
 
-                    /* Close Alert Dialog */
-                    dialog.dismiss();
-
+                        /* Close Alert Dialog */
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "All fields need to be filled!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

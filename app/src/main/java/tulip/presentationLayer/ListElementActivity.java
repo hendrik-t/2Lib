@@ -58,6 +58,18 @@ public class ListElementActivity extends Activity {
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, listViewItems.toArray(new String[0]));
         simpleList.setAdapter(arrayAdapter);
 
+        simpleList.setClickable(true);
+        simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                /** Start ListElementActivity.class **/
+                Intent myIntent = new Intent(ListElementActivity.this,
+                        ItemViewActivity.class);
+                //myIntent.putExtra("tableName", tableNames[position]);
+                startActivity(myIntent);
+            }
+        });
+
     }
 
 
