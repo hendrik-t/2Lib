@@ -140,4 +140,16 @@ public class TableList {
         return new ArrayList<>(Arrays.asList(dbCursor.getColumnNames()));
     }
 
+    public String toString(String tableName, TableList tab) {
+        String result = "";
+        ArrayList<Item> list= new ArrayList<>();
+        list = tab.open(tableName);
+
+        for(int i = 0; i < list.size(); i++) {
+            tab.getColumnNames(tableName).get(0);
+            result += list.get(i).getItemMap().get(tab.getColumnNames(tableName).get(0))+"\n\n";
+        }
+
+        return tableName +"\n\n"+result;
+    }
 }

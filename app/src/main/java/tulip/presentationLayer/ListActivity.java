@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -63,6 +64,7 @@ public class ListActivity extends Activity {
 
         simpleList.setClickable(true);
         simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 /** Start ListElementActivity.class **/
@@ -249,6 +251,7 @@ public class ListActivity extends Activity {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add("Add Item");
         menu.add("Rename");
+        menu.add("Share List");
         menu.add("Delete");
     }
 
@@ -387,6 +390,66 @@ public class ListActivity extends Activity {
 
             return true;
         }
+
+        // ********************************************************************+
+        else if(item.getTitle().equals("Share List")) {
+            /** Instantiate an AlertDialog.Builder with its constructor **/
+            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+
+            /** Sets up some characteristics of the dialog **/
+            builder.setTitle("Share List");
+            builder.setMessage("Press send to share the list.");
+
+
+            /** Add the buttons and their functionalities **/
+            builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            /** Get the AlertDialog from create() **/
+            final
+            AlertDialog dialog = builder.create();
+
+            /** Open the Soft Keyboard for user and shows dialog **/
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                    emailIntent.setData(Uri.parse("mailto:" + "recipient@example.com"));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "This is my Shared-List, please BUY!!!");
+
+                    TableList tab = new TableList(getApplicationContext());
+                    tab.open(tableNames[info.position]);
+                    String result = "";
+                    result = tab.toString(tableNames[info.position], tab);
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, result);
+
+                    try {
+                        startActivity(Intent.createChooser(emailIntent, "Send email using..."));
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(getApplicationContext(), "No email clients installed.", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            });
+
+            return true;
+        }
+
+        // ********************************************************************+
         else if(item.getTitle().equals("Delete")) {
             /* Call method to delete table */
             new TableList(getApplicationContext()).deleteTable(tableNames[info.position]);
