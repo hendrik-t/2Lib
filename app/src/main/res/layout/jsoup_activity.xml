@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+created by JB on 12.02.2018
+-->
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/jsoupTitle"
+        android:layout_width="223dp"
+        android:layout_height="28dp"
+        android:layout_marginBottom="61dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Jsoup Info:"/>
+
+
+    <TextView
+        android:id="@+id/ean"
+        android:layout_width="328dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="420dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginStart="16dp"
+        android:text="show EAN"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="326dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="show Title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ean" />
+
+
+</android.support.constraint.ConstraintLayout>
