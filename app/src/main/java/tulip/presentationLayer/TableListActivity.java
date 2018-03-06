@@ -398,7 +398,7 @@ public class TableListActivity extends Activity {
         // ********************************************************************+
         else if(item.getTitle().equals("Share List")) {
             /** Instantiate an AlertDialog.Builder with its constructor **/
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
 
             /** Sets up some characteristics of the dialog **/
             builder.setTitle("Share List");
