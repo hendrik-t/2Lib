@@ -160,8 +160,6 @@ public class TableListActivity extends Activity {
                                 /* Create the table */
                                 new TableList(getApplicationContext()).createTable(templateTables.get(saveInput-1), columns);
 
-
-
                                 /* Update List View */
                                 tableNames = new TableList(getApplicationContext()).getTableNames();
                                 arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
