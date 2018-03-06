@@ -19,13 +19,14 @@ Created by Kevin Struckmeyer on 22.01.18
     </ListView>
 
     <Button
-        android:id="@+id/newListButton"
+        android:id="@+id/createListButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/plus"
-        android:layout_marginLeft="325dp"
-        android:layout_marginTop="450dp">
-
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ic_add_circle_black_24dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp">
     </Button>
 
 

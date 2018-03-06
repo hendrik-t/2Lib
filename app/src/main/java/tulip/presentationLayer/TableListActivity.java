@@ -1,6 +1,5 @@
 package tulip.presentationLayer;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,12 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import DataLayer.DataAccessLayer.TableList;
 import DataLayer.Item;
@@ -33,7 +29,7 @@ import DataLayer.Item;
  * changed by Kevin Struckmeyer on 23.01.18
  */
 
-public class ListActivity extends Activity {
+public class TableListActivity extends Activity {
 
     /** Attributes **/
 
@@ -54,7 +50,7 @@ public class ListActivity extends Activity {
         /** Get the view from list_activity.xml **/
         setContentView(R.layout.list_activity);
 
-        floatButton = (Button) findViewById(R.id.newListButton);
+        floatButton = (Button) findViewById(R.id.createListButton);
         simpleList = (ListView)findViewById(R.id.listView);
         registerForContextMenu(simpleList);
 
@@ -65,9 +61,9 @@ public class ListActivity extends Activity {
         simpleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                /** Start ListElementActivity.class **/
-                Intent myIntent = new Intent(ListActivity.this,
-                        ListElementActivity.class);
+                /** Start ItemListActivity.class **/
+                Intent myIntent = new Intent(TableListActivity.this,
+                        ItemListActivity.class);
                 myIntent.putExtra("tableName", tableNames[position]);
                 startActivity(myIntent);
             }
@@ -78,7 +74,7 @@ public class ListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /** Instantiate an AlertDialog.Builder with its constructor **/
-                AlertDialog.Builder builderSingleChoices = new AlertDialog.Builder(ListActivity.this);
+                AlertDialog.Builder builderSingleChoices = new AlertDialog.Builder(TableListActivity.this);
 
                 /** Sets up some characteristics of the dialog **/
                 builderSingleChoices.setTitle("Pick a List-Template");
@@ -124,7 +120,7 @@ public class ListActivity extends Activity {
                         /* Custom */
                         else if (saveInput == 5) {
                             /** Instantiate an AlertDialog.Builder with its constructor **/
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
                             final LinearLayout layout = new LinearLayout(getApplicationContext());
                             layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -176,30 +172,38 @@ public class ListActivity extends Activity {
                             {
                                 @Override
                                 public void onClick(View v) {
-                                    if(!inputTitle.getText().toString().replace(" ", "").isEmpty()) {
-                                        /* Create the table */
-                                        ArrayList<String> columns = new ArrayList<String>();
-                                        for (int i = 0; i < columnInputs.size(); i++) {
-                                            if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
-                                                columns.add(columnInputs.get(i).getText().toString());
+                                    if(!inputTitle.getText().toString().trim().isEmpty()) {
+                                        String regEx = "[a-zA-Z0-9]*";
+                                        if (inputTitle.getText().toString().matches(regEx)) {
+                                            ArrayList<String> columns = new ArrayList<String>();
+                                            for (int i = 0; i < columnInputs.size(); i++) {
+                                                if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                                                    columns.add(columnInputs.get(i).getText().toString());
+                                                }
                                             }
+
+                                            if (!columns.isEmpty()) {
+                                                /* Create the table */
+                                                new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
+
+                                               /* Update List View */
+                                                tableNames = new TableList(getApplicationContext()).getTableNames();
+                                                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                                simpleList.setAdapter(arrayAdapter);
+
+                                                /* Close Alert Dialog */
+                                                customListCreationDialog.dismiss();
+                                            } else {
+                                                // display error
+                                                Toast.makeText(getApplicationContext(), "At least one property required.", Toast.LENGTH_LONG).show();
+                                            }
+                                        } else {
+                                            // display error
+                                            Toast.makeText(getApplicationContext(), "No spaces or symbols in the title allowed.", Toast.LENGTH_LONG).show();
                                         }
-
-                                        if (columns.isEmpty()) {
-
-                                        }
-
-                                        new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
-
-                                        /* Update List View */
-                                        tableNames = new TableList(getApplicationContext()).getTableNames();
-                                        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
-                                        simpleList.setAdapter(arrayAdapter);
-
-                                        /* Close Alert Dialog */
-                                        customListCreationDialog.dismiss();
                                     } else {
-
+                                        // display error
+                                        Toast.makeText(getApplicationContext(), "Title is empty.", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -208,7 +212,7 @@ public class ListActivity extends Activity {
                             {
                                 @Override
                                 public void onClick(View v) {
-                                    final EditText inputColumn = new EditText(ListActivity.this);
+                                    final EditText inputColumn = new EditText(TableListActivity.this);
                                     inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                                     inputColumn.setHint("Property name");
                                     layout.addView(inputColumn);
@@ -259,7 +263,7 @@ public class ListActivity extends Activity {
         /* Context Menu Click Event Handler */
         if(item.getTitle().equals("Add Item")) {
             /** Instantiate an AlertDialog.Builder with its constructor **/
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
             LinearLayout layout = new LinearLayout(getApplicationContext());
             layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -327,14 +331,14 @@ public class ListActivity extends Activity {
         }
         else if(item.getTitle().equals("Rename")) {
             /** Instantiate an AlertDialog.Builder with its constructor **/
-            AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
 
             /** Sets up some characteristics of the dialog **/
             builder.setTitle("Rename");
             builder.setMessage("No spaces or names that are already used.");
 
             /** Set up the input **/
-            final EditText input = new EditText(ListActivity.this);
+            final EditText input = new EditText(TableListActivity.this);
 
             /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tulip.presentationLayer">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
-    <uses-permission android:name="android.permission.INTERNET" /> <!--  for jsoup -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- for jsoup -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -22,12 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanActivity" ></activity>
-        <activity android:name=".ListActivity"></activity>
-        <activity android:name=".ListElementActivity"></activity>
-        <activity android:name=".JsoupActivity"></activity>
-
-
+        <activity android:name=".ScanActivity" />
+        <activity android:name=".TableListActivity" />
+        <activity android:name=".ItemListActivity" />
+        <activity android:name=".JsoupActivity" />
+        <activity android:name=".ItemViewActivity"></activity>
     </application>
 
 </manifest>

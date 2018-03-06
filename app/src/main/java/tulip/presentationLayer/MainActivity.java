@@ -12,9 +12,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View.OnClickListener;
 
-import DataLayer.DataAccessLayer.TableList;
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
 /**
  * created by nilskjellbeck on 12.12.17
  * changed by Kevin Struckmeyer on 13.12.17
@@ -100,7 +97,7 @@ public class MainActivity extends Activity {
 
                 /** Start NewActivity.class **/
                 Intent myIntent = new Intent(MainActivity.this,
-                        ListActivity.class);
+                        TableListActivity.class);
                 startActivity(myIntent);
             }
         });

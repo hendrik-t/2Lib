@@ -3,7 +3,7 @@
 Created by nilskjellbeck on 23.01.18
  -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -20,4 +20,4 @@ Created by nilskjellbeck on 23.01.18
         android:paddingTop="2dp"/>
 
 
-</LinearLayout>
+</RelativeLayout>

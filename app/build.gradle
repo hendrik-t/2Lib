@@ -27,5 +27,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'me.dm7.barcodescanner:zxing:1.9'
     compile 'org.jsoup:jsoup:1.11.2'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
 
 }
