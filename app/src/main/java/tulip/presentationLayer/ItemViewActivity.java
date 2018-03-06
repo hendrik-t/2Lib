@@ -18,14 +18,42 @@ import DataLayer.Item;
 
 public class ItemViewActivity extends Activity {
 
+    Button editButton;
+    Button cancelButton;
+    Button saveButton;
+    Item item;
+    ArrayList<String> columnNames;
+    ArrayList<TextView> textViews;
+    ArrayList<EditText> editTexts;
+
+    /* Help variables */
+    private static final float INVISIBLE = 0f;
+    private static final float VISIBLE = 1f;
+    private static final float FADED = 0.85f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_view_activity);
 
+        /* Initialize and configure buttons */
+        editButton = (Button) findViewById(R.id.editButton);
+        cancelButton = (Button) findViewById(R.id.cancelButton);
+        saveButton = (Button) findViewById(R.id.saveButton);
+
+        editButton.setEnabled(true);
+        editButton.setAlpha(VISIBLE);
+
+        cancelButton.setEnabled(false);
+        cancelButton.setAlpha(INVISIBLE);
+
+        saveButton.setEnabled(false);
+        saveButton.setAlpha(INVISIBLE);
+
+        /* Get extras */
         Intent intent = getIntent();
-        String tableName = intent.getExtras().getString("tableName");
-        int itempos = intent.getExtras().getInt("itempos");
+        final String tableName = intent.getExtras().getString("tableName");
+        final int itempos = intent.getExtras().getInt("itempos");
 
         // create the cointainer layout
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
@@ -37,10 +65,10 @@ public class ItemViewActivity extends Activity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         // Get necessary informations and initialize ArrayLists
-        final ArrayList<TextView> textViews = new ArrayList<TextView>();
-        final ArrayList<EditText> editTexts = new ArrayList<EditText>();
-        ArrayList<String> columnNames = new TableList(this).getColumnNames(tableName);
-        Item item = new TableList(this).open(tableName).get(itempos);
+        textViews = new ArrayList<TextView>();
+        editTexts = new ArrayList<EditText>();
+        columnNames = new TableList(this).getColumnNames(tableName);
+        item = new TableList(this).open(tableName).get(itempos);
 
         for(int i = 0; i < columnNames.size(); i++) {
             // Add textviews
@@ -59,7 +87,7 @@ public class ItemViewActivity extends Activity {
             editText.setText(item.getItemMap().get(columnNames.get(i)).toString());
             editText.setSingleLine(true);
             editText.setFocusable(false);
-            editText.setAlpha((float)0.85);
+            editText.setAlpha(FADED);
             editTexts.add(editText);
             linearLayout.addView(editText);
         }
@@ -67,23 +95,59 @@ public class ItemViewActivity extends Activity {
         // Set context view
         container.addView(linearLayout);
 
-        final Button editButton = (Button) findViewById(R.id.editButton);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // disable the edit button
-                editButton.setClickable(false);
-                editButton.setAlpha(0);
+                // disable the edit button and enable cancel and save buttons
+                toggleButtons();
 
                 // make all edittexts editable
-                for(int i = 0; i < editTexts.size(); i++)
-                {
+                for(int i = 0; i < editTexts.size(); i++) {
                     // let the user be able to change the values
                     editTexts.get(i).setFocusableInTouchMode(true);
-                    editTexts.get(i).setAlpha(1);
+                    editTexts.get(i).setAlpha(VISIBLE);
                 }
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleButtons();
+
+                // reset the edittext fields to actual values
+                for(int i = 0; i < editTexts.size(); i++) {
+                    editTexts.get(i).setText(item.getItemMap().get(columnNames.get(i)).toString());
+                    editTexts.get(i).setFocusable(false);
+                    editTexts.get(i).setAlpha(FADED);
+                }
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Item itemNew = new Item();
+
+                // TODO: fill itemNew with the edittext values
+
+
+                /* update item in DB */
+                new TableList(ItemViewActivity.this).editItem(tableName, itempos, itemNew);
+            }
+        });
+    }
+
+    /* toggles between editButton and cancel & saveButton being visible */
+    private void toggleButtons() {
+        cancelButton.setEnabled(!cancelButton.isEnabled());
+        cancelButton.setAlpha(editButton.getAlpha());
+
+        editButton.setEnabled(!editButton.isEnabled());
+        editButton.setAlpha(saveButton.getAlpha());
+
+        saveButton.setEnabled(!saveButton.isEnabled());
+        saveButton.setAlpha(cancelButton.getAlpha());
     }
 
 }

@@ -42,16 +42,16 @@ public class TableList {
     }
 
 
-    /* Deletes a table in the DB */
-    public void deleteTable(String tableName) {
-        String statement = "DROP TABLE IF EXISTS " + tableName + ";";
+    /* Rename a table */
+    public void renameTable(String oldName, String newName) {
+        String statement = "ALTER TABLE " + oldName + " RENAME TO " + newName + ";";
         db.execSQL(statement);
     }
 
 
-    /* Rename a table */
-    public void renameTable(String oldName, String newName) {
-        String statement = "ALTER TABLE " + oldName + " RENAME TO " + newName + ";";
+    /* Deletes a table in the DB */
+    public void deleteTable(String tableName) {
+        String statement = "DROP TABLE IF EXISTS " + tableName + ";";
         db.execSQL(statement);
     }
 
@@ -102,6 +102,28 @@ public class TableList {
     }
 
 
+    /* edits an Item in the DB */
+    public void editItem(String tableName, int itemPos, Item itemNew) {
+        ArrayList<String> columnNames = getColumnNames(tableName);
+
+        /* prepare statement */
+        String statement = "UPDATE " + tableName + " SET ";
+        for(int i = 0; i < columnNames.size(); i++) {
+            statement += "'" + columnNames.get(i) + "' = '" + itemNew.getItemMap().get(columnNames.get(i)).toString() + "'";
+            if(i != columnNames.size()-1) { statement += ", "; }
+        }
+        statement += " WHERE rowid=";
+
+        Cursor cur = db.rawQuery("SELECT rowid, * FROM " + tableName + ";", null);
+        if (cur.moveToFirst()) {
+            for (; itemPos > 0; itemPos--) { cur.moveToNext(); }
+            int id = cur.getInt(0);
+            statement += id + ";";
+            db.execSQL(statement);
+        }
+    }
+
+
     /* deletes an Item from the DB */
     public void deleteItem(String tableName, int pos) {
         Cursor cur = db.rawQuery("SELECT rowid, * FROM " + tableName + ";", null);
@@ -110,12 +132,6 @@ public class TableList {
             int id = cur.getInt(0);
             db.execSQL("DELETE FROM " + tableName + " WHERE rowid=" + id + ";");
         }
-    }
-
-
-    /* edits an Item in the DB */
-    public void editItem(Item itemOld, Item itemNew) {
-
     }
 
 
