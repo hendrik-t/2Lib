@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +39,8 @@ public class TableListActivity extends Activity {
     ArrayAdapter<String> arrayAdapter;
     Button floatButton;
     String tableNames[];
-    CharSequence[] template = {"Books", "Games", "Movies", "Music", "Custom"};
+    CharSequence[] template = {"Books", "Music", "Movies", "Games", "Custom"};
+    ArrayList<String> templateTables;
     int saveInput=0;
 
     @Override
@@ -46,7 +48,15 @@ public class TableListActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         /** Init **/
+        templateTables = new ArrayList<>();
+        templateTables.add("Books");
+        templateTables.add("Music");
+        templateTables.add("Movies");
+        templateTables.add("Games");
+
         tableNames = new TableList(getApplicationContext()).getTableNames();
+        final ArrayList<String> tableNamesAL = new ArrayList<>();
+        for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
 
         /** Get the view from list_activity.xml **/
         setContentView(R.layout.list_activity);
@@ -87,11 +97,11 @@ public class TableListActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         if (template[which] == "Books") {
                             saveInput = 1;
-                        } else if (template[which] == "Games") {
+                        } else if (template[which] == "Music") {
                             saveInput = 2;
                         } else if (template[which] == "Movies") {
                             saveInput = 3;
-                        } else if (template[which] == "Music") {
+                        } else if (template[which] == "Games") {
                             saveInput = 4;
                         } else if (template[which] == "Custom") {
                             saveInput = 5;
@@ -103,20 +113,64 @@ public class TableListActivity extends Activity {
                 /** Add the buttons and their functionalities **/
                 builderSingleChoices.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        /* Books */
-                        if (saveInput == 1) {
+                        if(saveInput != 5) {
+                            if(tableNamesAL.contains(templateTables.get(saveInput - 1))) {
+                                Toast.makeText(getApplicationContext(), "List already exists.", Toast.LENGTH_LONG).show();
+                            } else {
+                                ArrayList<String> columns = new ArrayList<>();
 
-                        }
-                        /* Games */
-                        else if (saveInput == 2) {
+                                /* Books */
+                                if (saveInput == 1) {
+                                    columns.add("Title");
+                                    columns.add("Author");
+                                    columns.add("Genre");
+                                    columns.add("Publisher");
+                                    columns.add("Publication Date");
+                                    columns.add("Language");
+                                    columns.add("ISBN Number");
+                                }
+                                /* Music */
+                                else if (saveInput == 2) {
+                                    columns.add("Album Title");
+                                    columns.add("Artist");
+                                    columns.add("Label");
+                                    columns.add("Release Date");
+                                    columns.add("Genre");
+                                    columns.add("Number of Tracks");
+                                    columns.add("Length");
+                                }
+                                /* Movies */
+                                else if (saveInput == 3) {
+                                    columns.add("Title");
+                                    columns.add("Release Year");
+                                    columns.add("Genre");
+                                    columns.add("Length");
+                                    columns.add("IMDb Rating");
+                                }
+                                /* Games */
+                                else if (saveInput == 4) {
+                                    columns.add("Title");
+                                    columns.add("Release Year");
+                                    columns.add("Genre");
+                                    columns.add("Developer");
+                                    columns.add("Publisher");
+                                    columns.add("Platform");
+                                }
 
-                        }
-                        /* Movies */
-                        else if (saveInput == 3) {
+                                /* Create the table */
+                                new TableList(getApplicationContext()).createTable(templateTables.get(saveInput-1), columns);
 
-                        }
-                        /* Music */
-                        else if (saveInput == 4) {
+
+
+                                /* Update List View */
+                                tableNames = new TableList(getApplicationContext()).getTableNames();
+                                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                simpleList.setAdapter(arrayAdapter);
+
+                                /* Update internal Variables */
+                                tableNamesAL.clear();
+                                for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
+                            }
 
                         }
                         /* Custom */
@@ -170,42 +224,38 @@ public class TableListActivity extends Activity {
                             /** Shows dialog **/
                             customListCreationDialog.show();
 
-                            customListCreationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-                            {
+                            customListCreationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(!inputTitle.getText().toString().trim().isEmpty()) {
-                                        String regEx = "[a-zA-Z0-9]*";
-                                        if (inputTitle.getText().toString().matches(regEx)) {
-                                            ArrayList<String> columns = new ArrayList<String>();
-                                            for (int i = 0; i < columnInputs.size(); i++) {
-                                                if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
-                                                    columns.add(columnInputs.get(i).getText().toString());
-                                                }
+                                    if (inputTitle.getText().toString().trim().isEmpty()) {
+                                        Toast.makeText(getApplicationContext(), "Title can't be empty.", Toast.LENGTH_LONG).show();
+                                    } else if (templateTables.contains(inputTitle.getText().toString())) {
+                                        Toast.makeText(getApplicationContext(), "This title is reserved for a preset list.", Toast.LENGTH_LONG).show();
+                                    } else if (!inputTitle.getText().toString().matches("[a-zA-Z0-9]*")) {
+                                        Toast.makeText(getApplicationContext(), "No spaces or symbols in the title allowed.", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        ArrayList<String> columns = new ArrayList<String>();
+                                        for (int i = 0; i < columnInputs.size(); i++) {
+                                            if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                                                columns.add(columnInputs.get(i).getText().toString());
                                             }
+                                        }
 
-                                            if (!columns.isEmpty()) {
-                                                /* Create the table */
-                                                new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
+                                        if (!columns.isEmpty()) {
+                                            /* Create the table */
+                                            new TableList(getApplicationContext()).createTable(inputTitle.getText().toString(), columns);
 
-                                               /* Update List View */
-                                                tableNames = new TableList(getApplicationContext()).getTableNames();
-                                                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
-                                                simpleList.setAdapter(arrayAdapter);
+                                            /* Update List View */
+                                            tableNames = new TableList(getApplicationContext()).getTableNames();
+                                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                            simpleList.setAdapter(arrayAdapter);
 
-                                                /* Close Alert Dialog */
-                                                customListCreationDialog.dismiss();
-                                            } else {
-                                                // display error
-                                                Toast.makeText(getApplicationContext(), "At least one property required.", Toast.LENGTH_LONG).show();
-                                            }
+                                            /* Close Alert Dialog */
+                                            customListCreationDialog.dismiss();
                                         } else {
                                             // display error
-                                            Toast.makeText(getApplicationContext(), "No spaces or symbols in the title allowed.", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "At least one property required.", Toast.LENGTH_LONG).show();
                                         }
-                                    } else {
-                                        // display error
-                                        Toast.makeText(getApplicationContext(), "Title is empty.", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -333,65 +383,66 @@ public class TableListActivity extends Activity {
             return true;
         }
         else if(item.getTitle().equals("Rename")) {
-            /** Instantiate an AlertDialog.Builder with its constructor **/
-            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
+            if(templateTables.contains(tableNames[info.position])) {
+                Toast.makeText(getApplicationContext(), "Can't rename template lists.", Toast.LENGTH_SHORT).show();
+            } else {
+                /** Instantiate an AlertDialog.Builder with its constructor **/
+                AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
 
-            /** Sets up some characteristics of the dialog **/
-            builder.setTitle("Rename");
-            builder.setMessage("No spaces or names that are already used.");
+                /** Sets up some characteristics of the dialog **/
+                builder.setTitle("Rename");
+                builder.setMessage("No spaces or names that are already used.");
 
-            /** Set up the input **/
-            final EditText input = new EditText(TableListActivity.this);
+                /** Set up the input **/
+                final EditText input = new EditText(TableListActivity.this);
 
-            /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
-            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-            builder.setView(input);
+                /** Specify the type of input expected; this sets the input as a number, and will not mask the text **/
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
 
-            /** Sets the cursors into the input field **/
-            input.requestFocus();
+                /** Sets the cursors into the input field **/
+                input.requestFocus();
 
 
-            /** Add the buttons and their functionalities **/
-            builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    // Event Handler a bit below
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
-                }
-            });
+                /** Add the buttons and their functionalities **/
+                builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Event Handler a bit below
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
 
-            /** Get the AlertDialog from create() **/
-            final
-            AlertDialog dialog = builder.create();
+                /** Get the AlertDialog from create() **/
+                final AlertDialog dialog = builder.create();
 
-            /** Open the Soft Keyboard for user and shows dialog **/
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            dialog.show();
+                /** Open the Soft Keyboard for user and shows dialog **/
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                dialog.show();
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                     /* If the input isnt empty, doesnt contain spaces and no table with that name already exists */
-                    if((!input.getText().toString().isEmpty() && !input.getText().toString().contains(" ")) && !Arrays.asList(tableNames).contains(input.getText().toString())) {
+                        if ((!input.getText().toString().isEmpty() && !input.getText().toString().contains(" ")) && !Arrays.asList(tableNames).contains(input.getText().toString())) {
                         /* Rename table in DB */
-                        new TableList(getApplicationContext()).renameTable(tableNames[info.position], input.getText().toString());
+                            new TableList(getApplicationContext()).renameTable(tableNames[info.position], input.getText().toString());
 
                         /* Update the ListView */
-                        tableNames = new TableList(getApplicationContext()).getTableNames();
-                        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
-                        simpleList.setAdapter(arrayAdapter);
+                            tableNames = new TableList(getApplicationContext()).getTableNames();
+                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                            simpleList.setAdapter(arrayAdapter);
 
                         /* Close Alert Dialog */
-                        dialog.dismiss();
+                            dialog.dismiss();
+                        }
                     }
-                }
-            });
-
+                });
+            }
             return true;
         }
 
