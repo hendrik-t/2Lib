@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class ItemListActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /** Get the view from list_activity.xml **/
-        setContentView(R.layout.list_activity);
+        /** Get the view from table_list_activitytivity.xml **/
+        setContentView(R.layout.table_list_activity);
 
         Intent intent = getIntent();
         tableName =  intent.getExtras().getString("tableName");
@@ -56,7 +57,7 @@ public class ItemListActivity extends Activity {
         ArrayList<String> listViewItems = new ArrayList<String>();
         for (Item item : items) { listViewItems.add(item.getItemMap().get(firstColumn).toString()); }
 
-        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, listViewItems.toArray(new String[0]));
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
         simpleList.setAdapter(arrayAdapter);
 
         simpleList.setClickable(true);
@@ -76,8 +77,12 @@ public class ItemListActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /** Instantiate an AlertDialog.Builder with its constructor **/
-                AlertDialog.Builder builder = new AlertDialog.Builder(ItemListActivity.this);
-                LinearLayout layout = new LinearLayout(getApplicationContext());
+                final AlertDialog.Builder builder = new AlertDialog.Builder(ItemListActivity.this);
+                final ScrollView scrollView = new ScrollView(getApplicationContext());
+                final LinearLayout layout = new LinearLayout(getApplicationContext());
+
+                scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 layout.setOrientation(LinearLayout.VERTICAL);
 
                 /** Sets up some characteristics of the dialog **/
@@ -96,7 +101,10 @@ public class ItemListActivity extends Activity {
 
                     layout.addView(inputs.get(i));
                 }
-                builder.setView(layout);
+
+                /* set view */
+                scrollView.addView(layout);
+                builder.setView(scrollView);
 
                 /** Add the buttons and their functionalities **/
                 builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -122,6 +130,7 @@ public class ItemListActivity extends Activity {
                 {
                     @Override
                     public void onClick(View v) {
+                        // TODO: input handling, app crashes when using the symbol '
                         boolean inputsValid = true;
                         for (int i = 0; i < columnNames.size(); i++) { if (inputs.get(i).getText().toString().replace(" ", "").isEmpty()) inputsValid = false; }
                         if (inputsValid) {
@@ -135,7 +144,7 @@ public class ItemListActivity extends Activity {
                             ArrayList<Item> items = new TableList(getApplicationContext()).open(tableName);
                             ArrayList<String> listViewItems = new ArrayList<String>();
                             for (Item item : items) { listViewItems.add(item.getItemMap().get(firstColumn).toString()); }
-                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, listViewItems.toArray(new String[0]));
+                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
                             simpleList.setAdapter(arrayAdapter);
 
                         /* Close Alert Dialog */
@@ -182,7 +191,7 @@ public class ItemListActivity extends Activity {
             ArrayList<String> listViewItems = new ArrayList<String>();
             for (Item item : items) { listViewItems.add(item.getItemMap().get(firstColumn).toString()); }
 
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, listViewItems.toArray(new String[0]));
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
             simpleList.setAdapter(arrayAdapter);
 
             return true;

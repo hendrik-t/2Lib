@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,10 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,6 +41,7 @@ public class TableListActivity extends Activity {
     ArrayAdapter<String> arrayAdapter;
     Button floatButton;
     String tableNames[];
+    ArrayList<String> tableNamesAL;
     CharSequence[] template = {"Books", "Music", "Movies", "Games", "Custom"};
     ArrayList<String> templateTables;
     int saveInput=0;
@@ -55,17 +58,17 @@ public class TableListActivity extends Activity {
         templateTables.add("Games");
 
         tableNames = new TableList(getApplicationContext()).getTableNames();
-        final ArrayList<String> tableNamesAL = new ArrayList<>();
+        tableNamesAL = new ArrayList<>();
         for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
 
-        /** Get the view from list_activity.xml **/
-        setContentView(R.layout.list_activity);
+        /** Get the view from table_list_activitytivity.xml **/
+        setContentView(R.layout.table_list_activity);
 
         floatButton = (Button) findViewById(R.id.createListButton);
         simpleList = (ListView)findViewById(R.id.listView);
         registerForContextMenu(simpleList);
 
-        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
         simpleList.setAdapter(arrayAdapter);
 
         simpleList.setClickable(true);
@@ -89,7 +92,7 @@ public class TableListActivity extends Activity {
                 AlertDialog.Builder builderSingleChoices = new AlertDialog.Builder(TableListActivity.this);
 
                 /** Sets up some characteristics of the dialog **/
-                builderSingleChoices.setTitle("Pick a List-Template");
+                builderSingleChoices.setTitle("Pick a List Type");
                 // DONT TRY ADDING A MESSAGE, DOENST WORK!!!!
 
                 builderSingleChoices.setSingleChoiceItems(template, -1, new DialogInterface.OnClickListener() {
@@ -113,9 +116,32 @@ public class TableListActivity extends Activity {
                 /** Add the buttons and their functionalities **/
                 builderSingleChoices.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if(saveInput != 5) {
+                        // User clicked Ok
+                    }
+                });
+                builderSingleChoices.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                /** Get the AlertDialog from create() **/
+                final AlertDialog dialog = builderSingleChoices.create();
+
+
+                /** Shows Dialog **/
+                dialog.show();
+
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
+                        if(saveInput == 0) {
+                            Toast.makeText(getApplicationContext(), "Please select the type of list you want to create.", Toast.LENGTH_LONG).show();
+                        }
+                        else if(saveInput != 5) {
                             if(tableNamesAL.contains(templateTables.get(saveInput - 1))) {
-                                Toast.makeText(getApplicationContext(), "List already exists.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "List already exists.", Toast.LENGTH_SHORT).show();
                             } else {
                                 ArrayList<String> columns = new ArrayList<>();
 
@@ -162,20 +188,24 @@ public class TableListActivity extends Activity {
 
                                 /* Update List View */
                                 tableNames = new TableList(getApplicationContext()).getTableNames();
-                                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
                                 simpleList.setAdapter(arrayAdapter);
 
                                 /* Update internal Variables */
                                 tableNamesAL.clear();
                                 for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
                             }
-
+                            dialog.dismiss();
                         }
                         /* Custom */
                         else if (saveInput == 5) {
                             /** Instantiate an AlertDialog.Builder with its constructor **/
                             final AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
+                            final ScrollView scrollView = new ScrollView(getApplicationContext());
                             final LinearLayout layout = new LinearLayout(getApplicationContext());
+
+                            scrollView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                            layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
                             layout.setOrientation(LinearLayout.VERTICAL);
 
                             /** Sets up some characteristics of the dialog **/
@@ -185,11 +215,17 @@ public class TableListActivity extends Activity {
                             /** Set up the input **/
                             final EditText inputTitle = new EditText(getApplicationContext());
                             inputTitle.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                            inputTitle.setTextColor(0xff000000);
+                            inputTitle.setAlpha(1);
                             inputTitle.setHint("List title");
+                            inputTitle.setHintTextColor(0x96000000);
 
                             final EditText inputFirstColumn = new EditText(getApplicationContext());
                             inputFirstColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                            inputFirstColumn.setTextColor(0xff000000);
+                            inputFirstColumn.setAlpha(1);
                             inputFirstColumn.setHint("Property name");
+                            inputFirstColumn.setHintTextColor(0x96000000);
 
                             layout.addView(inputTitle);
                             layout.addView(inputFirstColumn);
@@ -197,7 +233,9 @@ public class TableListActivity extends Activity {
                             final ArrayList<EditText> columnInputs = new ArrayList<EditText>();
                             columnInputs.add(inputFirstColumn);
 
-                            builder.setView(layout);
+                            /* set view */
+                            scrollView.addView(layout);
+                            builder.setView(scrollView);
 
                             /** Add the buttons and their functionalities **/
                             builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
@@ -220,19 +258,20 @@ public class TableListActivity extends Activity {
                             final AlertDialog customListCreationDialog = builder.create();
 
                             /** Shows dialog **/
+                            customListCreationDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                             customListCreationDialog.show();
 
                             customListCreationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     if (inputTitle.getText().toString().trim().isEmpty()) {
-                                        Toast.makeText(getApplicationContext(), "Title can't be empty.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "Title can't be empty.", Toast.LENGTH_SHORT).show();
                                     } else if (templateTables.contains(inputTitle.getText().toString())) {
-                                        Toast.makeText(getApplicationContext(), "This title is reserved for a preset list.", Toast.LENGTH_LONG).show();
-                                    } else if (!inputTitle.getText().toString().matches("[a-zA-Z0-9]*")) {
-                                        Toast.makeText(getApplicationContext(), "No spaces or symbols in the title allowed.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "This title is reserved for a Preset-List.", Toast.LENGTH_SHORT).show();
+                                    } else if (!inputTitle.getText().toString().matches("[a-zA-Z]*")) {
+                                        Toast.makeText(getApplicationContext(), "No spaces, numbers or symbols in the title allowed.", Toast.LENGTH_LONG).show();
                                     } else {
-                                        ArrayList<String> columns = new ArrayList<String>();
+                                        ArrayList<String> columns = new ArrayList<>();
                                         for (int i = 0; i < columnInputs.size(); i++) {
                                             if (!columnInputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
                                                 columns.add(columnInputs.get(i).getText().toString());
@@ -245,14 +284,14 @@ public class TableListActivity extends Activity {
 
                                             /* Update List View */
                                             tableNames = new TableList(getApplicationContext()).getTableNames();
-                                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
                                             simpleList.setAdapter(arrayAdapter);
 
                                             /* Close Alert Dialog */
                                             customListCreationDialog.dismiss();
                                         } else {
                                             // display error
-                                            Toast.makeText(getApplicationContext(), "At least one property required.", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "At least one property required.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -264,37 +303,31 @@ public class TableListActivity extends Activity {
                                 public void onClick(View v) {
                                     final EditText inputColumn = new EditText(TableListActivity.this);
                                     inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                                    inputColumn.setTextColor(0xff000000);
+                                    inputColumn.setAlpha(1);
                                     inputColumn.setHint("Property name");
+                                    inputColumn.setHintTextColor(0x96000000);
+                                    inputColumn.requestFocus();
                                     layout.addView(inputColumn);
                                     builder.setView(layout);
 
                                     columnInputs.add(inputColumn);
 
                                     if (columnInputs.size() == 9) {
-                                        Toast.makeText(getApplicationContext(), "Maximum amount reached", Toast.LENGTH_LONG).show();
-                                        customListCreationDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setClickable(false);
+                                        Toast.makeText(getApplicationContext(), "Maximum amount reached", Toast.LENGTH_SHORT).show();
+                                        customListCreationDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(false);
                                     }
                                 }
                             });
+                            dialog.dismiss();
                         }
-
+                        saveInput = 0;
                     }
                 });
-                builderSingleChoices.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+            }
 
-                /** Get the AlertDialog from create() **/
-                AlertDialog dialog = builderSingleChoices.create();
-
-                /** Shows Dialog **/
-                dialog.show();
-                }
-
-            });
-        }
+        });
+    }
 
 
 
@@ -314,8 +347,12 @@ public class TableListActivity extends Activity {
         /* Context Menu Click Event Handler */
         if(item.getTitle().equals("Add Item")) {
             /** Instantiate an AlertDialog.Builder with its constructor **/
-            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
-            LinearLayout layout = new LinearLayout(getApplicationContext());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
+            final ScrollView scrollView = new ScrollView(getApplicationContext());
+            final LinearLayout layout = new LinearLayout(getApplicationContext());
+
+            scrollView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             layout.setOrientation(LinearLayout.VERTICAL);
 
             /** Sets up some characteristics of the dialog **/
@@ -334,7 +371,10 @@ public class TableListActivity extends Activity {
 
                 layout.addView(inputs.get(i));
             }
-            builder.setView(layout);
+
+            /* set view */
+            scrollView.addView(layout);
+            builder.setView(scrollView);
 
             /** Add the buttons and their functionalities **/
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -373,7 +413,7 @@ public class TableListActivity extends Activity {
                         /* Close Alert Dialog */
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(getApplicationContext(), "All fields need to be filled!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -382,7 +422,7 @@ public class TableListActivity extends Activity {
         }
         else if(item.getTitle().equals("Rename")) {
             if(templateTables.contains(tableNames[info.position])) {
-                Toast.makeText(getApplicationContext(), "Can't rename template lists.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Unable to rename Preset-Lists.", Toast.LENGTH_SHORT).show();
             } else {
                 /** Instantiate an AlertDialog.Builder with its constructor **/
                 AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
@@ -432,7 +472,7 @@ public class TableListActivity extends Activity {
 
                         /* Update the ListView */
                             tableNames = new TableList(getApplicationContext()).getTableNames();
-                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
                             simpleList.setAdapter(arrayAdapter);
 
                         /* Close Alert Dialog */
@@ -509,7 +549,9 @@ public class TableListActivity extends Activity {
 
             /* Update the ListView */
             tableNames = new TableList(getApplicationContext()).getTableNames();
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_element_activity, R.id.textView, tableNames);
+            tableNamesAL.clear();
+            for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
             simpleList.setAdapter(arrayAdapter);
 
             return true;
