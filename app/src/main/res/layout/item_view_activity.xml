@@ -33,10 +33,18 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"/>
 
-    <LinearLayout
-        android:id="@+id/container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="540dp"
-        android:orientation="vertical"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp">
+        <LinearLayout
+            android:id="@+id/container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp">
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

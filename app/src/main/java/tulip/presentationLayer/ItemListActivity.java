@@ -130,9 +130,19 @@ public class ItemListActivity extends Activity {
                 {
                     @Override
                     public void onClick(View v) {
-                        // TODO: input handling, app crashes when using the symbol '
                         boolean inputsValid = true;
-                        for (int i = 0; i < columnNames.size(); i++) { if (inputs.get(i).getText().toString().replace(" ", "").isEmpty()) inputsValid = false; }
+                        for(EditText editText : inputs) {
+                            if(editText.getText().toString().replace(" ", "").isEmpty()) {
+                                Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
+                                inputsValid = false;
+                                break;
+                            }
+                            if(editText.getText().toString().contains("'")) {
+                                Toast.makeText(getApplicationContext(), "No apostrophes allowed.", Toast.LENGTH_LONG).show();
+                                inputsValid = false;
+                                break;
+                            }
+                        }
                         if (inputsValid) {
                             Item newItem = new Item();
                             for (int i = 0; i < columnNames.size(); i++) {
@@ -149,8 +159,6 @@ public class ItemListActivity extends Activity {
 
                         /* Close Alert Dialog */
                             dialog.dismiss();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "All fields need to be filled!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

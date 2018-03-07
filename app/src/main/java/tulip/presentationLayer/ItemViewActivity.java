@@ -78,7 +78,7 @@ public class ItemViewActivity extends Activity {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             textView.setTextColor(0xff000000); // black
             //textView.setBackgroundColor(0xff66ff66); // hex color 0xAARRGGBB
-            textView.setPadding(20, 20, 20, 20); // in pixels (left, top, right, bottom)
+            textView.setPadding(20, 40, 20, 10); // in pixels (left, top, right, bottom)
             textViews.add(textView);
             linearLayout.addView(textView);
 
@@ -88,6 +88,7 @@ public class ItemViewActivity extends Activity {
             editText.setSingleLine(true);
             editText.setFocusable(false);
             editText.setAlpha(FADED);
+            editText.setPadding(20, 10, 20, 40); // in pixels (left, top, right, bottom)
             editTexts.add(editText);
             linearLayout.addView(editText);
         }
