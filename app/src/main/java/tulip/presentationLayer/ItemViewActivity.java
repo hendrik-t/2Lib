@@ -1,15 +1,19 @@
 package tulip.presentationLayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -86,6 +90,7 @@ public class ItemViewActivity extends Activity {
             EditText editText = new EditText(this);
             editText.setText(item.getItemMap().get(columnNames.get(i)).toString());
             editText.setSingleLine(true);
+            editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             editText.setFocusable(false);
             editText.setAlpha(FADED);
             editText.setPadding(20, 10, 20, 40); // in pixels (left, top, right, bottom)
@@ -114,6 +119,10 @@ public class ItemViewActivity extends Activity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
                 toggleButtons();
 
                 // reset the edittext fields to actual values
@@ -128,13 +137,41 @@ public class ItemViewActivity extends Activity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Item itemNew = new Item();
+                // Hide the keyboard
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-                // TODO: fill itemNew with the edittext values
+                boolean inputsValid = true;
+                for(EditText editText : editTexts) {
+                    if(editText.getText().toString().replace(" ", "").isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
+                        inputsValid = false;
+                        break;
+                    }
+                    if(editText.getText().toString().contains("'")) {
+                        Toast.makeText(getApplicationContext(), "No apostrophes allowed.", Toast.LENGTH_LONG).show();
+                        inputsValid = false;
+                        break;
+                    }
+                }
+                if (inputsValid) {
+                    Item itemNew = new Item();
+                    for (int i = 0; i < columnNames.size(); i++) {
+                        itemNew.addEntryToHashMap(columnNames.get(i), editTexts.get(i).getText().toString());
+                    }
 
+                    /* update item in DB */
+                    new TableList(ItemViewActivity.this).editItem(tableName, itempos, itemNew);
 
-                /* update item in DB */
-                new TableList(ItemViewActivity.this).editItem(tableName, itempos, itemNew);
+                    /* switch out of editing mode */
+                    toggleButtons();
+
+                    // set the edittext fields to not editable
+                    for(int i = 0; i < editTexts.size(); i++) {
+                        editTexts.get(i).setFocusable(false);
+                        editTexts.get(i).setAlpha(FADED);
+                    }
+                }
             }
         });
     }

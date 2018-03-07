@@ -35,6 +35,7 @@ public class ItemListActivity extends Activity {
     ArrayAdapter<String> arrayAdapter;
     Button floatButton;
     String tableName;
+    String firstColumn;
 
 
     @Override
@@ -51,7 +52,7 @@ public class ItemListActivity extends Activity {
         simpleList = (ListView)findViewById(R.id.listView);
         registerForContextMenu(simpleList);
 
-        final String firstColumn = new TableList(getApplicationContext()).getColumnNames(tableName).get(0);
+        firstColumn = new TableList(getApplicationContext()).getColumnNames(tableName).get(0);
         ArrayList<Item> items = new TableList(getApplicationContext()).open(tableName);
 
         ArrayList<String> listViewItems = new ArrayList<String>();
@@ -152,12 +153,12 @@ public class ItemListActivity extends Activity {
 
                             /* Update List View */
                             ArrayList<Item> items = new TableList(getApplicationContext()).open(tableName);
-                            ArrayList<String> listViewItems = new ArrayList<String>();
+                            ArrayList<String> listViewItems = new ArrayList<>();
                             for (Item item : items) { listViewItems.add(item.getItemMap().get(firstColumn).toString()); }
-                            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
+                            arrayAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
                             simpleList.setAdapter(arrayAdapter);
 
-                        /* Close Alert Dialog */
+                            /* Close Alert Dialog */
                             dialog.dismiss();
                         }
                     }
@@ -206,6 +207,19 @@ public class ItemListActivity extends Activity {
         }
         return true;
 
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        /* Update List View */
+        ArrayList<Item> items = new TableList(getApplicationContext()).open(tableName);
+        ArrayList<String> listViewItems = new ArrayList<>();
+        for (Item item : items) { listViewItems.add(item.getItemMap().get(firstColumn).toString()); }
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, listViewItems.toArray(new String[0]));
+        simpleList.setAdapter(arrayAdapter);
     }
 
 }
