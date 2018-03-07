@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +59,7 @@ public class ItemViewActivity extends Activity {
         Intent intent = getIntent();
         final String tableName = intent.getExtras().getString("tableName");
         final int itempos = intent.getExtras().getInt("itempos");
+        boolean editMode = intent.getExtras().getBoolean("editMode");
 
         // create the cointainer layout
         LinearLayout container = (LinearLayout) findViewById(R.id.container);
@@ -100,6 +102,9 @@ public class ItemViewActivity extends Activity {
 
         // Set context view
         container.addView(linearLayout);
+
+        // set keyboard hidden
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +179,10 @@ public class ItemViewActivity extends Activity {
                 }
             }
         });
+
+        if(editMode) {
+            editButton.performClick();
+        }
     }
 
     /* toggles between editButton and cancel & saveButton being visible */

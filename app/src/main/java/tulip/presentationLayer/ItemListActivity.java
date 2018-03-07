@@ -70,6 +70,7 @@ public class ItemListActivity extends Activity {
                         ItemViewActivity.class);
                 myIntent.putExtra("tableName", tableName);
                 myIntent.putExtra("itempos", position);
+                myIntent.putExtra("editMode", false);
                 startActivity(myIntent);
             }
         });
@@ -187,6 +188,7 @@ public class ItemListActivity extends Activity {
                     ItemViewActivity.class);
             myIntent.putExtra("tableName", tableName);
             myIntent.putExtra("itempos", info.position);
+            myIntent.putExtra("editMode", true);
             startActivity(myIntent);
         }
         else if (menuItem.getTitle().equals("Delete")) {
