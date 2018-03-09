@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import DataLayer.Item;
  * created by nilskjellbeck on 23.01.18
  */
 
-public class ItemListActivity extends Activity {
+public class ItemListActivity extends AppCompatActivity {
 
     /** Attributes **/
     ListView simpleList;
@@ -50,6 +52,8 @@ public class ItemListActivity extends Activity {
 
         floatButton = (Button) findViewById(R.id.createListButton);
         simpleList = (ListView)findViewById(R.id.listView);
+        TextView title = (TextView) findViewById(R.id.titleListView);
+        title.setText("Items");
         registerForContextMenu(simpleList);
 
         firstColumn = new TableList(getApplicationContext()).getColumnNames(tableName).get(0);
@@ -91,7 +95,7 @@ public class ItemListActivity extends Activity {
                 builder.setTitle("Add Item");
                 builder.setMessage("Type in the values of the item you want to add.");
 
-                final ArrayList<EditText> inputs = new ArrayList<EditText>();
+                final ArrayList<EditText> inputs = new ArrayList<>();
                 final ArrayList<String> columnNames = new TableList(getApplicationContext()).getColumnNames(tableName);
                 for (int i = 0; i < columnNames.size(); i++) {
                     /** Set up the inputs **/
@@ -134,11 +138,6 @@ public class ItemListActivity extends Activity {
                     public void onClick(View v) {
                         boolean inputsValid = true;
                         for(EditText editText : inputs) {
-                            if(editText.getText().toString().replace(" ", "").isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
-                                inputsValid = false;
-                                break;
-                            }
                             if(editText.getText().toString().contains("'")) {
                                 Toast.makeText(getApplicationContext(), "No apostrophes allowed.", Toast.LENGTH_LONG).show();
                                 inputsValid = false;
@@ -148,6 +147,9 @@ public class ItemListActivity extends Activity {
                         if (inputsValid) {
                             Item newItem = new Item();
                             for (int i = 0; i < columnNames.size(); i++) {
+                                if(inputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                                    inputs.get(i).setText("-");
+                                }
                                 newItem.addEntryToHashMap(columnNames.get(i), inputs.get(i).getText().toString());
                             }
                             new TableList(getApplicationContext()).addItem(tableName, newItem);

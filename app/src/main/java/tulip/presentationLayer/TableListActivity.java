@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import DataLayer.Item;
  * changed by Kevin Struckmeyer on 23.01.18
  */
 
-public class TableListActivity extends Activity {
+public class TableListActivity extends AppCompatActivity {
 
     /** Attributes **/
 
@@ -66,6 +68,8 @@ public class TableListActivity extends Activity {
 
         floatButton = (Button) findViewById(R.id.createListButton);
         simpleList = (ListView)findViewById(R.id.listView);
+        TextView title = (TextView) findViewById(R.id.titleListView);
+        title.setText("Lists");
         registerForContextMenu(simpleList);
 
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
@@ -224,7 +228,7 @@ public class TableListActivity extends Activity {
                             inputFirstColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                             inputFirstColumn.setTextColor(0xff000000);
                             inputFirstColumn.setAlpha(1);
-                            inputFirstColumn.setHint("Property name");
+                            inputFirstColumn.setHint("Property (e.g. 'Name', 'Genre', etc.)");
                             inputFirstColumn.setHintTextColor(0x96000000);
 
                             layout.addView(inputTitle);
@@ -305,7 +309,7 @@ public class TableListActivity extends Activity {
                                     inputColumn.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                                     inputColumn.setTextColor(0xff000000);
                                     inputColumn.setAlpha(1);
-                                    inputColumn.setHint("Property name");
+                                    inputColumn.setHint("Property");
                                     inputColumn.setHintTextColor(0x96000000);
                                     inputColumn.requestFocus();
                                     layout.addView(inputColumn);
@@ -403,11 +407,6 @@ public class TableListActivity extends Activity {
                 public void onClick(View v) {
                     boolean inputsValid = true;
                     for(EditText editText : inputs) {
-                        if(editText.getText().toString().replace(" ", "").isEmpty()) {
-                            Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
-                            inputsValid = false;
-                            break;
-                        }
                         if(editText.getText().toString().contains("'")) {
                             Toast.makeText(getApplicationContext(), "No apostrophes allowed.", Toast.LENGTH_LONG).show();
                             inputsValid = false;
@@ -417,6 +416,9 @@ public class TableListActivity extends Activity {
                     if (inputsValid) {
                         Item newItem = new Item();
                         for (int i = 0; i < columnNames.size(); i++) {
+                            if(inputs.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                                inputs.get(i).setText("-");
+                            }
                             newItem.addEntryToHashMap(columnNames.get(i), inputs.get(i).getText().toString());
                         }
                         new TableList(getApplicationContext()).addItem(tableNames[info.position], newItem);
@@ -553,15 +555,52 @@ public class TableListActivity extends Activity {
 
         // ********************************************************************+
         else if(item.getTitle().equals("Delete")) {
-            /* Call method to delete table */
-            new TableList(getApplicationContext()).deleteTable(tableNames[info.position]);
+            /** Instantiate an AlertDialog.Builder with its constructor **/
+            AlertDialog.Builder builder = new AlertDialog.Builder(TableListActivity.this);
 
-            /* Update the ListView */
-            tableNames = new TableList(getApplicationContext()).getTableNames();
-            tableNamesAL.clear();
-            for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
-            simpleList.setAdapter(arrayAdapter);
+            /** Sets up some characteristics of the dialog **/
+            builder.setTitle("Delete List");
+            builder.setMessage("Do you really want to delete the list '" + tableNames[info.position] + "'?");
+
+            /** Add the buttons and their functionalities **/
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // Event Handler a bit below
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            /** Get the AlertDialog from create() **/
+            final AlertDialog dialog = builder.create();
+
+            /** Open the Soft Keyboard for user and shows dialog **/
+            dialog.show();
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    /* Call method to delete table */
+                    new TableList(getApplicationContext()).deleteTable(tableNames[info.position]);
+
+                    /* Update the ListView */
+                    tableNames = new TableList(getApplicationContext()).getTableNames();
+                    tableNamesAL.clear();
+                    for(String tableName : tableNames) { if(tableName != "Custom") tableNamesAL.add(tableName); }
+                    arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_list_activity, R.id.textView, tableNames);
+                    simpleList.setAdapter(arrayAdapter);
+
+                    dialog.dismiss();
+                }
+            });
+
+
+
+
 
             return true;
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import DataLayer.DataAccessLayer.TableList;
 import DataLayer.Item;
 
-public class ItemViewActivity extends Activity {
+public class ItemViewActivity extends AppCompatActivity {
 
     Button editButton;
     Button cancelButton;
@@ -148,11 +149,6 @@ public class ItemViewActivity extends Activity {
 
                 boolean inputsValid = true;
                 for(EditText editText : editTexts) {
-                    if(editText.getText().toString().replace(" ", "").isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "All fields need to be filled.", Toast.LENGTH_SHORT).show();
-                        inputsValid = false;
-                        break;
-                    }
                     if(editText.getText().toString().contains("'")) {
                         Toast.makeText(getApplicationContext(), "No apostrophes allowed.", Toast.LENGTH_LONG).show();
                         inputsValid = false;
@@ -162,11 +158,17 @@ public class ItemViewActivity extends Activity {
                 if (inputsValid) {
                     Item itemNew = new Item();
                     for (int i = 0; i < columnNames.size(); i++) {
+                        if(editTexts.get(i).getText().toString().replace(" ", "").isEmpty()) {
+                            editTexts.get(i).setText("-");
+                        }
                         itemNew.addEntryToHashMap(columnNames.get(i), editTexts.get(i).getText().toString());
                     }
 
                     /* update item in DB */
                     new TableList(ItemViewActivity.this).editItem(tableName, itempos, itemNew);
+
+                    /* give feedback */
+                    Toast.makeText(getApplicationContext(), "Changes successfully saved.", Toast.LENGTH_SHORT).show();
 
                     /* switch out of editing mode */
                     toggleButtons();

@@ -2,6 +2,7 @@ package tulip.presentationLayer;
 
 import android.app.*;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +20,7 @@ import android.view.View.OnClickListener;
  * changed by nilskjellbeck on 23.01.18
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     /** Attributes **/
     Button scanButton, searchButton, openMyListButton;
