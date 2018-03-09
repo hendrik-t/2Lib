@@ -545,7 +545,7 @@ public class TableListActivity extends AppCompatActivity {
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(getApplicationContext(), "No email clients installed.", Toast.LENGTH_SHORT).show();
                     }
-
+                    dialog.dismiss();
                 }
 
             });
