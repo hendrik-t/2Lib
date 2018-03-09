@@ -8,13 +8,10 @@
 - removed unnecessary TableList parameters: Context and tableName
 12.02.2018
 - overloaded constructor of Item class to support ArrayList<String> as parameters
-13.0.2018
-- added a ListView to ListElementActivity and filled it with the data of the opened list/table
 14.02.2018
 - added basic functionality to add items to a list
-- added context menu for ListElementActivity listview and implemented delete functionality
+- implemented delete functionality
 15.02.2018
 - implemented TableList methods open() and deleteItem()
-16.02.2018
-- refactored "dialog1" (the dialog used for creating a custom list) to "customListCreationDialog"
-- made the list creation dynamic (lets you add more columns)
+07.03.208
+- implemented editItem functionality

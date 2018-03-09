@@ -1,6 +1,5 @@
-package tulip.presentationLayer;
+package presentationLayer;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 
 import DataLayer.DataAccessLayer.TableList;
 import DataLayer.Item;
+import tulip.presentationLayer.R;
 
 /**
  * created by nilskjellbeck on 23.01.18

@@ -11,7 +11,7 @@ changed by Kevin Struckmeyer on 23.01.18
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tulip.presentationLayer.MainActivity">
+    tools:context="presentationLayer.MainActivity">
 
     <TextView
         android:layout_width="149dp"

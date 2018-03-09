@@ -1,19 +1,21 @@
-package tulip.presentationLayer;
+package presentationLayer;
 
 /**
  * Created by JB on 12.02.2018.
  */
 
-import android.os.Bundle;
-import android.widget.TextView;
-import org.jsoup.nodes.Document;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+
+import tulip.presentationLayer.R;
 
 public class JsoupActivity extends AppCompatActivity {
 

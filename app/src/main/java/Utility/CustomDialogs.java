@@ -7,8 +7,6 @@ import android.text.InputType;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import tulip.presentationLayer.MainActivity;
-
 /**
  * Created by nilskjellbeck on 15.12.17.
  */

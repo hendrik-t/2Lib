@@ -1,8 +1,8 @@
 package DataLayer.DataAccessLayer;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.content.Context;
 
 /**
  * Created by Hendrik on 14-Dec-17.

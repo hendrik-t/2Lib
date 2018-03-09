@@ -1,17 +1,18 @@
-package tulip.presentationLayer;
+package presentationLayer;
 
-import android.app.*;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.view.View.OnClickListener;
+
+import tulip.presentationLayer.R;
 
 /**
  * created by nilskjellbeck on 12.12.17

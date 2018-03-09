@@ -1,6 +1,5 @@
-package tulip.presentationLayer;
+package presentationLayer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 
 import DataLayer.DataAccessLayer.TableList;
 import DataLayer.Item;
+import tulip.presentationLayer.R;
 
 public class ItemViewActivity extends AppCompatActivity {
 

@@ -17,18 +17,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="presentationLayer.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanActivity" />
-        <activity android:name=".TableListActivity" />
-        <activity android:name=".ItemListActivity" />
-        <activity android:name=".JsoupActivity" />
-        <activity android:name=".ItemViewActivity"></activity>
+        <activity android:name="presentationLayer.ScanActivity" />
+        <activity android:name="presentationLayer.TableListActivity" />
+        <activity android:name="presentationLayer.ItemListActivity" />
+        <activity android:name="presentationLayer.JsoupActivity" />
+        <activity android:name="presentationLayer.ItemViewActivity"></activity>
     </application>
 
 </manifest>
